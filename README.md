@@ -1,4 +1,4 @@
-# Admin Scaffold
+# BoyKing Admin
 
 这是一个基于 `gin + vue3 + element-plus` 精简出来的后台脚手架。
 

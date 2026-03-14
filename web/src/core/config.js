@@ -3,7 +3,7 @@ import packageInfo from '../../package.json'
 const greenText = (text) => `\x1b[32m${text}\x1b[0m`
 
 export const config = {
-  appName: '管理后台脚手架',
+  appName: 'BoyKing Admin',
   showViteLogo: true,
   keepAliveTabs: false,
   useStaticMenu: false,

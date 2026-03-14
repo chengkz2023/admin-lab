@@ -22,7 +22,7 @@ func RunServer() {
 	address := fmt.Sprintf(":%d", global.GVA_CONFIG.System.Addr)
 
 	fmt.Printf(`
-管理后台脚手架已启动
+BoyKing Admin 已启动
 版本: %s
 访问地址: http://127.0.0.1%s
 `, global.Version, address)

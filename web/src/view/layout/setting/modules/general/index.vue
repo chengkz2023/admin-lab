@@ -135,12 +135,12 @@
               <Logo />
             </div>
             <div class="flex-1">
-              <h4 class="gva-theme-text-main mb-3 text-xl font-semibold">管理后台脚手架</h4>
+              <h4 class="gva-theme-text-main mb-3 text-xl font-semibold">BoyKing Admin</h4>
               <p class="gva-theme-text-sub mb-2 text-sm leading-relaxed">
-                当前项目已收敛为内部使用的后台管理脚手架，保留基础系统管理能力和可继续扩展的前后端结构。
+                当前项目已整理为内部使用的全栈后台脚手架，保留系统管理能力和可持续扩展的前后端结构。
               </p>
               <p class="gva-theme-text-sub text-sm leading-relaxed">
-                如果后续需要品牌名、官网地址或团队信息，可以继续在这里替换为你自己的内容。
+                如果后续还要继续补品牌信息、官网地址或团队介绍，可以再在这里按你的需要微调。
               </p>
             </div>
           </div>
@@ -207,7 +207,7 @@ const handleExportConfig = () => {
 
   const link = document.createElement('a')
   link.href = url
-  link.download = `admin-scaffold-config-${new Date().toISOString().split('T')[0]}.json`
+  link.download = `boyking-admin-config-${new Date().toISOString().split('T')[0]}.json`
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)

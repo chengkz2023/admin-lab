@@ -1,15 +1,11 @@
 # -----------------------------------------------------------------------------
-# Admin Scaffold Configuration
-# 1. 基础运行
-# 2. 安全认证
-# 3. 数据存储
-# 4. 文件与导出
-# 5. 可选扩展
+# BoyKing Admin Configuration
+# 1. Basic runtime
+# 2. Security
+# 3. Data storage
+# 4. File storage
 # -----------------------------------------------------------------------------
 
-# -----------------------------------------------------------------------------
-# 1. 基础运行
-# -----------------------------------------------------------------------------
 system:
   router-prefix: ""
   addr: 8888
@@ -20,7 +16,7 @@ system:
 
 zap:
   level: info
-  prefix: "[admin-scaffold/server]"
+  prefix: "[boyking-admin/server]"
   format: console
   director: log
   encode-level: LowercaseColorLevelEncoder
@@ -33,14 +29,11 @@ cors:
   mode: allow-all
   whitelist: []
 
-# -----------------------------------------------------------------------------
-# 2. 安全认证
-# -----------------------------------------------------------------------------
 jwt:
   signing-key: "change-this-jwt-secret"
   expires-time: 7d
   buffer-time: 1d
-  issuer: scaffold
+  issuer: boyking-admin
 
 captcha:
   key-long: 6
@@ -49,16 +42,11 @@ captcha:
   open-captcha: 0
   open-captcha-timeout: 3600
 
-# -----------------------------------------------------------------------------
-# 3. 数据存储
-# 当前项目固定使用 MySQL，Redis 按需启用
-# ClickHouse 目前仅预留注释位置，代码侧尚未接入
-# -----------------------------------------------------------------------------
 mysql:
   path: 127.0.0.1
   port: "3306"
   config: charset=utf8mb4&parseTime=True&loc=Local
-  db-name: admin_scaffold
+  db-name: boyking_admin
   username: root
   password: "change-this-mysql-password"
   prefix: ""
@@ -78,32 +66,12 @@ redis:
   useCluster: false
   clusterAddrs: []
 
-# clickhouse:
-#   addr: 127.0.0.1:9000
-#   database: admin_scaffold
-#   username: default
-#   password: ""
-# 说明:
-#   这里只是未来扩展占位，当前代码还没有接入。
-
-# -----------------------------------------------------------------------------
-# 4. 文件与导出
-# -----------------------------------------------------------------------------
 local:
   path: uploads/file
   store-path: uploads/file
 
-# -----------------------------------------------------------------------------
-# 4. 可选扩展
-# 这些能力当前未启用，如需恢复再按需补回完整配置块
-# -----------------------------------------------------------------------------
-# mongo:
-# redis-list:
-# db-list:
-# qiniu:
-# aliyun-oss:
-# minio:
-# aws-s3:
-# cloudflare-r2:
-# tencent-cos:
-# hua-wei-obs:
+# clickhouse:
+#   addr: 127.0.0.1:9000
+#   database: boyking_admin
+#   username: default
+#   password: ""
