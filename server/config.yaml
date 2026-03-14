@@ -1,0 +1,109 @@
+# -----------------------------------------------------------------------------
+# Admin Scaffold Configuration
+# 1. 基础运行
+# 2. 安全认证
+# 3. 数据存储
+# 4. 文件与导出
+# 5. 可选扩展
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# 1. 基础运行
+# -----------------------------------------------------------------------------
+system:
+  router-prefix: ""
+  addr: 8888
+  iplimit-count: 15000
+  iplimit-time: 3600
+  use-strict-auth: false
+  disable-auto-migrate: false
+
+zap:
+  level: info
+  prefix: "[admin-scaffold/server]"
+  format: console
+  director: log
+  encode-level: LowercaseColorLevelEncoder
+  stacktrace-key: stacktrace
+  show-line: true
+  log-in-console: true
+  retention-day: -1
+
+cors:
+  mode: allow-all
+  whitelist: []
+
+# -----------------------------------------------------------------------------
+# 2. 安全认证
+# -----------------------------------------------------------------------------
+jwt:
+  signing-key: "change-this-jwt-secret"
+  expires-time: 7d
+  buffer-time: 1d
+  issuer: scaffold
+
+captcha:
+  key-long: 6
+  img-width: 240
+  img-height: 80
+  open-captcha: 0
+  open-captcha-timeout: 3600
+
+# -----------------------------------------------------------------------------
+# 3. 数据存储
+# 当前项目固定使用 MySQL，Redis 按需启用
+# ClickHouse 目前仅预留注释位置，代码侧尚未接入
+# -----------------------------------------------------------------------------
+mysql:
+  path: 127.0.0.1
+  port: "3306"
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  db-name: admin_scaffold
+  username: root
+  password: "change-this-mysql-password"
+  prefix: ""
+  engine: ""
+  log-mode: error
+  max-idle-conns: 10
+  max-open-conns: 100
+  singular: false
+  log-zap: false
+
+redis:
+  enable: false
+  name: default
+  addr: 127.0.0.1:6379
+  password: ""
+  db: 0
+  useCluster: false
+  clusterAddrs: []
+
+# clickhouse:
+#   addr: 127.0.0.1:9000
+#   database: admin_scaffold
+#   username: default
+#   password: ""
+# 说明:
+#   这里只是未来扩展占位，当前代码还没有接入。
+
+# -----------------------------------------------------------------------------
+# 4. 文件与导出
+# -----------------------------------------------------------------------------
+local:
+  path: uploads/file
+  store-path: uploads/file
+
+# -----------------------------------------------------------------------------
+# 4. 可选扩展
+# 这些能力当前未启用，如需恢复再按需补回完整配置块
+# -----------------------------------------------------------------------------
+# mongo:
+# redis-list:
+# db-list:
+# qiniu:
+# aliyun-oss:
+# minio:
+# aws-s3:
+# cloudflare-r2:
+# tencent-cos:
+# hua-wei-obs:
