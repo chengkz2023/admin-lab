@@ -1,0 +1,19 @@
+# Local debug overrides for admin-lab.
+# Copy to server/config.debug.yaml for personal development only.
+
+system:
+  addr: 8888
+
+mysql:
+  path: 127.0.0.1
+  port: "3306"
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  db-name: admin_lab
+  username: root
+  password: "replace-with-local-password"
+
+redis:
+  enable: false
+  addr: 127.0.0.1:6379
+  password: ""
+  db: 0

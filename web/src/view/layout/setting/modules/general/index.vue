@@ -135,7 +135,7 @@
               <Logo />
             </div>
             <div class="flex-1">
-              <h4 class="gva-theme-text-main mb-3 text-xl font-semibold">BoyKing Admin</h4>
+              <h4 class="gva-theme-text-main mb-3 text-xl font-semibold">admin-lab</h4>
               <p class="gva-theme-text-sub mb-2 text-sm leading-relaxed">
                 当前项目已整理为内部使用的全栈后台脚手架，保留系统管理能力和可持续扩展的前后端结构。
               </p>
@@ -207,7 +207,7 @@ const handleExportConfig = () => {
 
   const link = document.createElement('a')
   link.href = url
-  link.download = `boyking-admin-config-${new Date().toISOString().split('T')[0]}.json`
+  link.download = `admin-lab-config-${new Date().toISOString().split('T')[0]}.json`
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)

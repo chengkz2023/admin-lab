@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# BoyKing Admin Configuration
+# admin-lab Configuration
 # 1. Basic runtime
 # 2. Security
 # 3. Data storage
@@ -16,7 +16,7 @@ system:
 
 zap:
   level: info
-  prefix: "[boyking-admin/server]"
+  prefix: "[admin-lab/server]"
   format: console
   director: log
   encode-level: LowercaseColorLevelEncoder
@@ -33,7 +33,7 @@ jwt:
   signing-key: "change-this-jwt-secret"
   expires-time: 7d
   buffer-time: 1d
-  issuer: boyking-admin
+  issuer: admin-lab
 
 captcha:
   key-long: 6
@@ -46,7 +46,7 @@ mysql:
   path: 127.0.0.1
   port: "3306"
   config: charset=utf8mb4&parseTime=True&loc=Local
-  db-name: boyking_admin
+  db-name: admin_lab
   username: root
   password: "change-this-mysql-password"
   prefix: ""
