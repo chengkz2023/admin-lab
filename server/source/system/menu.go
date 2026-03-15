@@ -56,12 +56,12 @@ func (i *initMenu) InitializeData(ctx context.Context) (next context.Context, er
 	}
 
 	menuNameMap := make(map[string]uint)
-	allMenus := make([]SysBaseMenu, 0, len(parentMenus)+10)
+	allMenus := make([]SysBaseMenu, 0, len(parentMenus)+16)
 
 	for _, menu := range parentMenus {
 		savedMenu, saveErr := ensureMenu(db, menu)
 		if saveErr != nil {
-			return ctx, errors.Wrap(saveErr, SysBaseMenu{}.TableName()+"父级菜单初始化失败!")
+			return ctx, errors.Wrap(saveErr, SysBaseMenu{}.TableName()+"父级菜单初始化失败")
 		}
 		menuNameMap[savedMenu.Name] = savedMenu.ID
 		allMenus = append(allMenus, savedMenu)
@@ -75,15 +75,31 @@ func (i *initMenu) InitializeData(ctx context.Context) (next context.Context, er
 		{MenuLevel: 1, Hidden: false, ParentId: menuNameMap["superAdmin"], Path: "dictionary", Name: "dictionary", Component: "view/superAdmin/dictionary/sysDictionary.vue", Sort: 5, Meta: Meta{Title: "字典管理", Icon: "notebook"}},
 		{MenuLevel: 1, Hidden: false, ParentId: menuNameMap["superAdmin"], Path: "operation", Name: "operation", Component: "view/superAdmin/operation/sysOperationRecord.vue", Sort: 6, Meta: Meta{Title: "操作历史", Icon: "pie-chart"}},
 		{MenuLevel: 1, Hidden: false, ParentId: menuNameMap["superAdmin"], Path: "sysParams", Name: "sysParams", Component: "view/superAdmin/params/sysParams.vue", Sort: 7, Meta: Meta{Title: "参数管理", Icon: "compass"}},
-		{MenuLevel: 1, Hidden: false, ParentId: menuNameMap["lab"], Path: "simulation", Name: "labSimulation", Component: "view/lab/simulation/index.vue", Sort: 1, Meta: Meta{Title: "需求仿真", Icon: "document"}},
-		{MenuLevel: 1, Hidden: false, ParentId: menuNameMap["lab"], Path: "component-demo", Name: "labComponentDemo", Component: "view/lab/component-demo/index.vue", Sort: 2, Meta: Meta{Title: "组件示例", Icon: "magic-stick"}},
-		{MenuLevel: 1, Hidden: false, ParentId: menuNameMap["lab"], Path: "reusable", Name: "labReusable", Component: "view/lab/reusable/index.vue", Sort: 3, Meta: Meta{Title: "复用组件", Icon: "files"}},
+		{MenuLevel: 1, Hidden: false, ParentId: menuNameMap["lab"], Path: "simulation", Name: "labSimulation", Component: "view/routerHolder.vue", Sort: 1, Meta: Meta{Title: "需求仿真", Icon: "document"}},
+		{MenuLevel: 1, Hidden: false, ParentId: menuNameMap["lab"], Path: "component-demo", Name: "labComponentDemo", Component: "view/routerHolder.vue", Sort: 2, Meta: Meta{Title: "组件示例", Icon: "magic-stick"}},
+		{MenuLevel: 1, Hidden: false, ParentId: menuNameMap["lab"], Path: "reusable", Name: "labReusable", Component: "view/routerHolder.vue", Sort: 3, Meta: Meta{Title: "复用组件", Icon: "files"}},
 	}
 
 	for _, menu := range childMenus {
 		savedMenu, saveErr := ensureMenu(db, menu)
 		if saveErr != nil {
-			return ctx, errors.Wrap(saveErr, SysBaseMenu{}.TableName()+"子菜单初始化失败!")
+			return ctx, errors.Wrap(saveErr, SysBaseMenu{}.TableName()+"子菜单初始化失败")
+		}
+		menuNameMap[savedMenu.Name] = savedMenu.ID
+		allMenus = append(allMenus, savedMenu)
+	}
+
+	grandchildMenus := []SysBaseMenu{
+		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labSimulation"], Path: "overview", Name: "labSimulationOverview", Component: "view/lab/simulation/overview.vue", Sort: 1, Meta: Meta{Title: "概览", Icon: "tickets"}},
+		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labComponentDemo"], Path: "overview", Name: "labComponentDemoOverview", Component: "view/lab/component-demo/overview.vue", Sort: 1, Meta: Meta{Title: "概览", Icon: "tickets"}},
+		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "overview", Name: "labReusableOverview", Component: "view/lab/reusable/overview.vue", Sort: 1, Meta: Meta{Title: "概览", Icon: "tickets"}},
+		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "excel-io", Name: "labReusableExcelIO", Component: "view/lab/reusable/excel-io.vue", Sort: 2, Meta: Meta{Title: "Excel 实验面板", Icon: "document-copy"}},
+	}
+
+	for _, menu := range grandchildMenus {
+		savedMenu, saveErr := ensureMenu(db, menu)
+		if saveErr != nil {
+			return ctx, errors.Wrap(saveErr, SysBaseMenu{}.TableName()+"三级菜单初始化失败")
 		}
 		allMenus = append(allMenus, savedMenu)
 	}
@@ -97,20 +113,26 @@ func (i *initMenu) DataInserted(ctx context.Context) bool {
 	if !ok {
 		return false
 	}
+
+	requiredNames := []string{
+		"lab",
+		"labSimulation",
+		"labSimulationOverview",
+		"labComponentDemo",
+		"labComponentDemoOverview",
+		"labReusable",
+		"labReusableOverview",
+		"labReusableExcelIO",
+	}
+
 	if errors.Is(db.Where("path = ?", "admin").First(&SysBaseMenu{}).Error, gorm.ErrRecordNotFound) {
 		return false
 	}
-	if errors.Is(db.Where("name = ?", "lab").First(&SysBaseMenu{}).Error, gorm.ErrRecordNotFound) {
-		return false
-	}
-	if errors.Is(db.Where("name = ?", "labSimulation").First(&SysBaseMenu{}).Error, gorm.ErrRecordNotFound) {
-		return false
-	}
-	if errors.Is(db.Where("name = ?", "labComponentDemo").First(&SysBaseMenu{}).Error, gorm.ErrRecordNotFound) {
-		return false
-	}
-	if errors.Is(db.Where("name = ?", "labReusable").First(&SysBaseMenu{}).Error, gorm.ErrRecordNotFound) {
-		return false
+
+	for _, name := range requiredNames {
+		if errors.Is(db.Where("name = ?", name).First(&SysBaseMenu{}).Error, gorm.ErrRecordNotFound) {
+			return false
+		}
 	}
 	return true
 }

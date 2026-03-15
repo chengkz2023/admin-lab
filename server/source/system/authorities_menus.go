@@ -74,10 +74,14 @@ func (i *initMenuAuthority) DataInserted(ctx context.Context) bool {
 			return false
 		}
 		requiredMenus := map[string]bool{
-			"lab":              false,
-			"labSimulation":    false,
-			"labComponentDemo": false,
-			"labReusable":      false,
+			"lab":                      false,
+			"labSimulation":            false,
+			"labSimulationOverview":    false,
+			"labComponentDemo":         false,
+			"labComponentDemoOverview": false,
+			"labReusable":              false,
+			"labReusableOverview":      false,
+			"labReusableExcelIO":       false,
 		}
 		for _, menu := range auth.SysBaseMenus {
 			if _, ok := requiredMenus[menu.Name]; ok {

@@ -26,9 +26,34 @@ const staticMenus = [
     meta: { title: '实验室', icon: 'data-analysis' },
     component: 'view/lab/index.vue',
     children: [
-      { path: 'simulation', name: 'labSimulation', meta: { title: '需求仿真', icon: 'document' }, component: 'view/lab/simulation/index.vue' },
-      { path: 'component-demo', name: 'labComponentDemo', meta: { title: '组件示例', icon: 'magic-stick' }, component: 'view/lab/component-demo/index.vue' },
-      { path: 'reusable', name: 'labReusable', meta: { title: '复用组件', icon: 'files' }, component: 'view/lab/reusable/index.vue' }
+      {
+        path: 'simulation',
+        name: 'labSimulation',
+        meta: { title: '需求仿真', icon: 'document' },
+        component: 'view/routerHolder.vue',
+        children: [
+          { path: 'overview', name: 'labSimulationOverview', meta: { title: '概览', icon: 'tickets' }, component: 'view/lab/simulation/overview.vue' }
+        ]
+      },
+      {
+        path: 'component-demo',
+        name: 'labComponentDemo',
+        meta: { title: '组件示例', icon: 'magic-stick' },
+        component: 'view/routerHolder.vue',
+        children: [
+          { path: 'overview', name: 'labComponentDemoOverview', meta: { title: '概览', icon: 'tickets' }, component: 'view/lab/component-demo/overview.vue' }
+        ]
+      },
+      {
+        path: 'reusable',
+        name: 'labReusable',
+        meta: { title: '复用组件', icon: 'files' },
+        component: 'view/routerHolder.vue',
+        children: [
+          { path: 'overview', name: 'labReusableOverview', meta: { title: '概览', icon: 'tickets' }, component: 'view/lab/reusable/overview.vue' },
+          { path: 'excel-io', name: 'labReusableExcelIO', meta: { title: 'Excel 实验面板', icon: 'document-copy' }, component: 'view/lab/reusable/excel-io.vue' }
+        ]
+      }
     ]
   }
 ]

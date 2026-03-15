@@ -64,6 +64,7 @@ func Routers() *gin.Engine {
 	systemRouter.InitSysParamsRouter(privateGroup, publicGroup)
 	exampleRouter.InitFileUploadAndDownloadRouter(privateGroup)
 	exampleRouter.InitAttachmentCategoryRouterRouter(privateGroup)
+	exampleRouter.InitExcelIORouter(privateGroup)
 	initBizRouter(privateGroup, publicGroup)
 
 	global.GVA_ROUTERS = engine.Routes()
