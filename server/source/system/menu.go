@@ -50,17 +50,21 @@ func (i *initMenu) InitializeData(ctx context.Context) (next context.Context, er
 		return ctx, system.ErrMissingDBContext
 	}
 
-	allMenus := []SysBaseMenu{
+	parentMenus := []SysBaseMenu{
 		{MenuLevel: 0, Hidden: false, ParentId: 0, Path: "admin", Name: "superAdmin", Component: "view/superAdmin/index.vue", Sort: 1, Meta: Meta{Title: "超级管理员", Icon: "user"}},
-	}
-
-	if err = db.Create(&allMenus).Error; err != nil {
-		return ctx, errors.Wrap(err, SysBaseMenu{}.TableName()+"父级菜单初始化失败!")
+		{MenuLevel: 0, Hidden: false, ParentId: 0, Path: "lab", Name: "lab", Component: "view/lab/index.vue", Sort: 2, Meta: Meta{Title: "实验室", Icon: "data-analysis"}},
 	}
 
 	menuNameMap := make(map[string]uint)
-	for _, menu := range allMenus {
-		menuNameMap[menu.Name] = menu.ID
+	allMenus := make([]SysBaseMenu, 0, len(parentMenus)+10)
+
+	for _, menu := range parentMenus {
+		savedMenu, saveErr := ensureMenu(db, menu)
+		if saveErr != nil {
+			return ctx, errors.Wrap(saveErr, SysBaseMenu{}.TableName()+"父级菜单初始化失败!")
+		}
+		menuNameMap[savedMenu.Name] = savedMenu.ID
+		allMenus = append(allMenus, savedMenu)
 	}
 
 	childMenus := []SysBaseMenu{
@@ -71,14 +75,20 @@ func (i *initMenu) InitializeData(ctx context.Context) (next context.Context, er
 		{MenuLevel: 1, Hidden: false, ParentId: menuNameMap["superAdmin"], Path: "dictionary", Name: "dictionary", Component: "view/superAdmin/dictionary/sysDictionary.vue", Sort: 5, Meta: Meta{Title: "字典管理", Icon: "notebook"}},
 		{MenuLevel: 1, Hidden: false, ParentId: menuNameMap["superAdmin"], Path: "operation", Name: "operation", Component: "view/superAdmin/operation/sysOperationRecord.vue", Sort: 6, Meta: Meta{Title: "操作历史", Icon: "pie-chart"}},
 		{MenuLevel: 1, Hidden: false, ParentId: menuNameMap["superAdmin"], Path: "sysParams", Name: "sysParams", Component: "view/superAdmin/params/sysParams.vue", Sort: 7, Meta: Meta{Title: "参数管理", Icon: "compass"}},
+		{MenuLevel: 1, Hidden: false, ParentId: menuNameMap["lab"], Path: "simulation", Name: "labSimulation", Component: "view/lab/simulation/index.vue", Sort: 1, Meta: Meta{Title: "需求仿真", Icon: "document"}},
+		{MenuLevel: 1, Hidden: false, ParentId: menuNameMap["lab"], Path: "component-demo", Name: "labComponentDemo", Component: "view/lab/component-demo/index.vue", Sort: 2, Meta: Meta{Title: "组件示例", Icon: "magic-stick"}},
+		{MenuLevel: 1, Hidden: false, ParentId: menuNameMap["lab"], Path: "reusable", Name: "labReusable", Component: "view/lab/reusable/index.vue", Sort: 3, Meta: Meta{Title: "复用组件", Icon: "files"}},
 	}
 
-	if err = db.Create(&childMenus).Error; err != nil {
-		return ctx, errors.Wrap(err, SysBaseMenu{}.TableName()+"子菜单初始化失败!")
+	for _, menu := range childMenus {
+		savedMenu, saveErr := ensureMenu(db, menu)
+		if saveErr != nil {
+			return ctx, errors.Wrap(saveErr, SysBaseMenu{}.TableName()+"子菜单初始化失败!")
+		}
+		allMenus = append(allMenus, savedMenu)
 	}
 
-	allEntities := append(allMenus, childMenus...)
-	next = context.WithValue(ctx, i.InitializerName(), allEntities)
+	next = context.WithValue(ctx, i.InitializerName(), allMenus)
 	return next, nil
 }
 
@@ -90,5 +100,44 @@ func (i *initMenu) DataInserted(ctx context.Context) bool {
 	if errors.Is(db.Where("path = ?", "admin").First(&SysBaseMenu{}).Error, gorm.ErrRecordNotFound) {
 		return false
 	}
+	if errors.Is(db.Where("name = ?", "lab").First(&SysBaseMenu{}).Error, gorm.ErrRecordNotFound) {
+		return false
+	}
+	if errors.Is(db.Where("name = ?", "labSimulation").First(&SysBaseMenu{}).Error, gorm.ErrRecordNotFound) {
+		return false
+	}
+	if errors.Is(db.Where("name = ?", "labComponentDemo").First(&SysBaseMenu{}).Error, gorm.ErrRecordNotFound) {
+		return false
+	}
+	if errors.Is(db.Where("name = ?", "labReusable").First(&SysBaseMenu{}).Error, gorm.ErrRecordNotFound) {
+		return false
+	}
 	return true
+}
+
+func ensureMenu(db *gorm.DB, menu SysBaseMenu) (SysBaseMenu, error) {
+	var existing SysBaseMenu
+	err := db.Where("name = ?", menu.Name).First(&existing).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		if createErr := db.Create(&menu).Error; createErr != nil {
+			return SysBaseMenu{}, createErr
+		}
+		return menu, nil
+	}
+	if err != nil {
+		return SysBaseMenu{}, err
+	}
+
+	existing.MenuLevel = menu.MenuLevel
+	existing.Hidden = menu.Hidden
+	existing.ParentId = menu.ParentId
+	existing.Path = menu.Path
+	existing.Component = menu.Component
+	existing.Sort = menu.Sort
+	existing.Meta = menu.Meta
+
+	if saveErr := db.Save(&existing).Error; saveErr != nil {
+		return SysBaseMenu{}, saveErr
+	}
+	return existing, nil
 }

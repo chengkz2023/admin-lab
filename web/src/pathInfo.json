@@ -1,6 +1,10 @@
 {
   "/src/view/error/index.vue": "Error",
   "/src/view/error/reload.vue": "Reload",
+  "/src/view/lab/component-demo/index.vue": "LabComponentDemo",
+  "/src/view/lab/index.vue": "Lab",
+  "/src/view/lab/reusable/index.vue": "LabReusable",
+  "/src/view/lab/simulation/index.vue": "LabSimulation",
   "/src/view/layout/aside/asideComponent/asyncSubmenu.vue": "AsyncSubmenu",
   "/src/view/layout/aside/asideComponent/index.vue": "AsideComponent",
   "/src/view/layout/aside/asideComponent/menuItem.vue": "MenuItem",

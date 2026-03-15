@@ -20,21 +20,23 @@ type MenuService struct{}
 var MenuServiceApp = new(MenuService)
 
 func (menuService *MenuService) keepScaffoldSysMenus(menus []system.SysMenu) []system.SysMenu {
+	filteredMenus := make([]system.SysMenu, 0, len(menus))
 	for _, menu := range menus {
-		if menu.Name == "superAdmin" {
-			return []system.SysMenu{menu}
+		if menu.Name == "superAdmin" || menu.Name == "lab" {
+			filteredMenus = append(filteredMenus, menu)
 		}
 	}
-	return []system.SysMenu{}
+	return filteredMenus
 }
 
 func (menuService *MenuService) keepScaffoldBaseMenus(menus []system.SysBaseMenu) []system.SysBaseMenu {
+	filteredMenus := make([]system.SysBaseMenu, 0, len(menus))
 	for _, menu := range menus {
-		if menu.Name == "superAdmin" {
-			return []system.SysBaseMenu{menu}
+		if menu.Name == "superAdmin" || menu.Name == "lab" {
+			filteredMenus = append(filteredMenus, menu)
 		}
 	}
-	return []system.SysBaseMenu{}
+	return filteredMenus
 }
 
 func (menuService *MenuService) getMenuTreeMap(authorityId uint) (treeMap map[uint][]system.SysMenu, err error) {

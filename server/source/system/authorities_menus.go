@@ -35,15 +35,14 @@ func (i *initMenuAuthority) InitializeData(ctx context.Context) (next context.Co
 		return ctx, system.ErrMissingDBContext
 	}
 
-	initAuth := &initAuthority{}
-	authorities, ok := ctx.Value(initAuth.InitializerName()).([]sysModel.SysAuthority)
-	if !ok {
+	authorities, err := loadAuthorities(ctx, db)
+	if err != nil {
 		return ctx, errors.Wrap(system.ErrMissingDependentContext, "创建 [菜单-权限] 关联失败, 未找到权限表初始化数据")
 	}
 
-	allMenus, ok := ctx.Value(new(initMenu).InitializerName()).([]sysModel.SysBaseMenu)
-	if !ok {
-		return next, errors.Wrap(errors.New(""), "创建 [菜单-权限] 关联失败, 未找到菜单表初始化数据")
+	allMenus, err := loadMenus(ctx, db)
+	if err != nil {
+		return ctx, errors.Wrap(err, "创建 [菜单-权限] 关联失败, 未找到菜单表初始化数据")
 	}
 	next = ctx
 
@@ -71,7 +70,59 @@ func (i *initMenuAuthority) DataInserted(ctx context.Context) bool {
 		if ret.Error != nil {
 			return false
 		}
-		return len(auth.SysBaseMenus) > 0
+		if len(auth.SysBaseMenus) == 0 {
+			return false
+		}
+		requiredMenus := map[string]bool{
+			"lab":              false,
+			"labSimulation":    false,
+			"labComponentDemo": false,
+			"labReusable":      false,
+		}
+		for _, menu := range auth.SysBaseMenus {
+			if _, ok := requiredMenus[menu.Name]; ok {
+				requiredMenus[menu.Name] = true
+			}
+		}
+		for _, exists := range requiredMenus {
+			if !exists {
+				return false
+			}
+		}
+		return true
 	}
 	return false
+}
+
+func loadAuthorities(ctx context.Context, db *gorm.DB) ([]sysModel.SysAuthority, error) {
+	initAuth := &initAuthority{}
+	if authorities, ok := ctx.Value(initAuth.InitializerName()).([]sysModel.SysAuthority); ok && len(authorities) >= 3 {
+		return authorities, nil
+	}
+
+	requiredIDs := []uint{888, 9528, 8881}
+	authorities := make([]sysModel.SysAuthority, 0, len(requiredIDs))
+	for _, authorityID := range requiredIDs {
+		var authority sysModel.SysAuthority
+		if err := db.Where("authority_id = ?", authorityID).First(&authority).Error; err != nil {
+			return nil, err
+		}
+		authorities = append(authorities, authority)
+	}
+	return authorities, nil
+}
+
+func loadMenus(ctx context.Context, db *gorm.DB) ([]sysModel.SysBaseMenu, error) {
+	if menus, ok := ctx.Value(new(initMenu).InitializerName()).([]sysModel.SysBaseMenu); ok && len(menus) > 0 {
+		return menus, nil
+	}
+
+	var menus []sysModel.SysBaseMenu
+	if err := db.Order("sort asc, id asc").Find(&menus).Error; err != nil {
+		return nil, err
+	}
+	if len(menus) == 0 {
+		return nil, gorm.ErrRecordNotFound
+	}
+	return menus, nil
 }
