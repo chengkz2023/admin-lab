@@ -38,6 +38,7 @@ func Routers() *gin.Engine {
 
 	systemRouter := router.RouterGroupApp.System
 	exampleRouter := router.RouterGroupApp.Example
+	labRouter := router.RouterGroupApp.Lab
 
 	engine.StaticFS(global.GVA_CONFIG.Local.StorePath, justFilesFilesystem{http.Dir(global.GVA_CONFIG.Local.StorePath)})
 
@@ -64,7 +65,7 @@ func Routers() *gin.Engine {
 	systemRouter.InitSysParamsRouter(privateGroup, publicGroup)
 	exampleRouter.InitFileUploadAndDownloadRouter(privateGroup)
 	exampleRouter.InitAttachmentCategoryRouterRouter(privateGroup)
-	exampleRouter.InitExcelIORouter(privateGroup)
+	labRouter.ReusableRouterGroup.InitExcelIORouter(privateGroup)
 	initBizRouter(privateGroup, publicGroup)
 
 	global.GVA_ROUTERS = engine.Routes()

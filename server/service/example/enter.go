@@ -4,5 +4,4 @@ type ServiceGroup struct {
 	CustomerService
 	AttachmentCategoryService
 	FileUploadAndDownloadService
-	ExcelIOService
 }

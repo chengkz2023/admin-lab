@@ -1,8 +1,6 @@
-package example
+package reusable
 
-import (
-	"github.com/gin-gonic/gin"
-)
+import "github.com/gin-gonic/gin"
 
 type ExcelIORouter struct{}
 

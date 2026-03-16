@@ -1,4 +1,4 @@
-package example
+package reusable
 
 import (
 	"net/http"
