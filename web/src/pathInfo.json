@@ -7,6 +7,7 @@
   "/src/view/lab/reusable/excel-io.vue": "LabReusableExcelIO",
   "/src/view/lab/reusable/index.vue": "LabReusable",
   "/src/view/lab/reusable/overview.vue": "LabReusableOverview",
+  "/src/view/lab/reusable/reliable-upload.vue": "LabReusableReliableUpload",
   "/src/view/lab/simulation/base-data-io.vue": "LabSimulationBaseDataIO",
   "/src/view/lab/simulation/index.vue": "LabSimulation",
   "/src/view/lab/simulation/overview.vue": "LabSimulationOverview",

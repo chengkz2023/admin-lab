@@ -78,6 +78,7 @@
   ]
 
   const assets = [
+    { title: '可靠文件上报', description: '分钟任务、大任务、业务触发上报、备份文件重试和断点续跑。' },
     { title: 'Excel 导入导出', description: '模板下载、批量导入、解析校验、错误反馈和数据导出。' },
     { title: '通用查询工具栏', description: '收拢筛选、重置、展开、导出、快捷搜索等常见交互。' },
     { title: '可配置表格能力', description: '列显隐、列顺序、固定列、批量操作和空状态处理。' },

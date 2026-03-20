@@ -95,6 +95,7 @@ func (i *initMenu) InitializeData(ctx context.Context) (next context.Context, er
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labComponentDemo"], Path: "overview", Name: "labComponentDemoOverview", Component: "view/lab/component-demo/overview.vue", Sort: 1, Meta: Meta{Title: "概览", Icon: "tickets"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "overview", Name: "labReusableOverview", Component: "view/lab/reusable/overview.vue", Sort: 1, Meta: Meta{Title: "概览", Icon: "tickets"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "excel-io", Name: "labReusableExcelIO", Component: "view/lab/reusable/excel-io.vue", Sort: 2, Meta: Meta{Title: "Excel 实验面板", Icon: "document-copy"}},
+		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "reliable-upload", Name: "labReusableReliableUpload", Component: "view/lab/reusable/reliable-upload.vue", Sort: 3, Meta: Meta{Title: "可靠上报框架", Icon: "upload-filled"}},
 	}
 
 	for _, menu := range grandchildMenus {
@@ -125,6 +126,7 @@ func (i *initMenu) DataInserted(ctx context.Context) bool {
 		"labReusable",
 		"labReusableOverview",
 		"labReusableExcelIO",
+		"labReusableReliableUpload",
 	}
 
 	if errors.Is(db.Where("path = ?", "admin").First(&SysBaseMenu{}).Error, gorm.ErrRecordNotFound) {
