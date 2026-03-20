@@ -1,3 +1,5 @@
 package simulation
 
-type ServiceGroup struct{}
+type ServiceGroup struct {
+	BaseDataSimulationService
+}

@@ -32,7 +32,8 @@ const staticMenus = [
         meta: { title: '需求仿真', icon: 'document' },
         component: 'view/routerHolder.vue',
         children: [
-          { path: 'overview', name: 'labSimulationOverview', meta: { title: '概览', icon: 'tickets' }, component: 'view/lab/simulation/overview.vue' }
+          { path: 'overview', name: 'labSimulationOverview', meta: { title: '概览', icon: 'tickets' }, component: 'view/lab/simulation/overview.vue' },
+          { path: 'base-data-io', name: 'labSimulationBaseDataIO', meta: { title: '基础数据导入导出仿真', icon: 'document-copy' }, component: 'view/lab/simulation/base-data-io.vue' }
         ]
       },
       {

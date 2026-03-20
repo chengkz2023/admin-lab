@@ -65,6 +65,7 @@ func Routers() *gin.Engine {
 	systemRouter.InitSysParamsRouter(privateGroup, publicGroup)
 	exampleRouter.InitFileUploadAndDownloadRouter(privateGroup)
 	exampleRouter.InitAttachmentCategoryRouterRouter(privateGroup)
+	labRouter.SimulationRouterGroup.InitBaseDataSimulationRouter(privateGroup)
 	labRouter.ReusableRouterGroup.InitExcelIORouter(privateGroup)
 	initBizRouter(privateGroup, publicGroup)
 
