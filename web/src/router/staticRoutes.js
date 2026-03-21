@@ -52,7 +52,9 @@ const staticMenus = [
         component: 'view/routerHolder.vue',
         children: [
           { path: 'overview', name: 'labReusableOverview', meta: { title: '概览', icon: 'tickets' }, component: 'view/lab/reusable/overview.vue' },
-          { path: 'excel-io', name: 'labReusableExcelIO', meta: { title: 'Excel 实验面板', icon: 'document-copy' }, component: 'view/lab/reusable/excel-io.vue' }
+          { path: 'excel-io', name: 'labReusableExcelIO', meta: { title: 'Excel 实验面板', icon: 'document-copy' }, component: 'view/lab/reusable/excel-io.vue' },
+          { path: 'list-query-bar', name: 'labReusableListQueryBar', meta: { title: '列表查询栏', icon: 'search' }, component: 'view/lab/reusable/list-query-bar.vue' },
+          { path: 'reliable-upload', name: 'labReusableReliableUpload', meta: { title: '可靠上报框架', icon: 'upload-filled' }, component: 'view/lab/reusable/reliable-upload.vue' }
         ]
       }
     ]

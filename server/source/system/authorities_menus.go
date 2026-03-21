@@ -83,6 +83,7 @@ func (i *initMenuAuthority) DataInserted(ctx context.Context) bool {
 			"labReusable":               false,
 			"labReusableOverview":       false,
 			"labReusableExcelIO":        false,
+			"labReusableListQueryBar":   false,
 			"labReusableReliableUpload": false,
 		}
 		for _, menu := range auth.SysBaseMenus {
