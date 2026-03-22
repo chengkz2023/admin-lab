@@ -96,8 +96,9 @@ func (i *initMenu) InitializeData(ctx context.Context) (next context.Context, er
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "overview", Name: "labReusableOverview", Component: "view/lab/reusable/overview.vue", Sort: 1, Meta: Meta{Title: "概览", Icon: "tickets"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "excel-io", Name: "labReusableExcelIO", Component: "view/lab/reusable/excel-io.vue", Sort: 2, Meta: Meta{Title: "Excel 实验面板", Icon: "document-copy"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "crud-form-dialog", Name: "labReusableCrudFormDialog", Component: "view/lab/reusable/crud-form-dialog.vue", Sort: 3, Meta: Meta{Title: "新增编辑弹窗", Icon: "edit-pen"}},
-		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "list-query-bar", Name: "labReusableListQueryBar", Component: "view/lab/reusable/list-query-bar.vue", Sort: 4, Meta: Meta{Title: "列表查询栏", Icon: "search"}},
-		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "reliable-upload", Name: "labReusableReliableUpload", Component: "view/lab/reusable/reliable-upload.vue", Sort: 5, Meta: Meta{Title: "可靠上报框架", Icon: "upload-filled"}},
+		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "security-echarts", Name: "labReusableSecurityEcharts", Component: "view/lab/reusable/security-echarts.vue", Sort: 4, Meta: Meta{Title: "网安可视化面板", Icon: "trend-charts"}},
+		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "list-query-bar", Name: "labReusableListQueryBar", Component: "view/lab/reusable/list-query-bar.vue", Sort: 5, Meta: Meta{Title: "列表查询栏", Icon: "search"}},
+		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "reliable-upload", Name: "labReusableReliableUpload", Component: "view/lab/reusable/reliable-upload.vue", Sort: 6, Meta: Meta{Title: "可靠上报框架", Icon: "upload-filled"}},
 	}
 
 	for _, menu := range grandchildMenus {
@@ -129,6 +130,7 @@ func (i *initMenu) DataInserted(ctx context.Context) bool {
 		"labReusableOverview",
 		"labReusableExcelIO",
 		"labReusableCrudFormDialog",
+		"labReusableSecurityEcharts",
 		"labReusableListQueryBar",
 		"labReusableReliableUpload",
 	}

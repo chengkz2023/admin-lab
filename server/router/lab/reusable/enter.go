@@ -7,9 +7,11 @@ import (
 type RouterGroup struct {
 	ExcelIORouter
 	ReliableUploadRouter
+	SecurityDashboardRouter
 }
 
 var (
-	excelIOApi        = api.ApiGroupApp.LabApiGroup.ReusableApiGroup.ExcelIOApi
-	reliableUploadApi = api.ApiGroupApp.LabApiGroup.ReusableApiGroup.ReliableUploadApi
+	excelIOApi           = api.ApiGroupApp.LabApiGroup.ReusableApiGroup.ExcelIOApi
+	reliableUploadApi    = api.ApiGroupApp.LabApiGroup.ReusableApiGroup.ReliableUploadApi
+	securityDashboardApi = api.ApiGroupApp.LabApiGroup.ReusableApiGroup.SecurityDashboardApi
 )

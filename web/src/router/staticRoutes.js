@@ -54,6 +54,7 @@ const staticMenus = [
           { path: 'overview', name: 'labReusableOverview', meta: { title: '概览', icon: 'tickets' }, component: 'view/lab/reusable/overview.vue' },
           { path: 'excel-io', name: 'labReusableExcelIO', meta: { title: 'Excel 实验面板', icon: 'document-copy' }, component: 'view/lab/reusable/excel-io.vue' },
           { path: 'crud-form-dialog', name: 'labReusableCrudFormDialog', meta: { title: '新增编辑弹窗', icon: 'edit-pen' }, component: 'view/lab/reusable/crud-form-dialog.vue' },
+          { path: 'security-echarts', name: 'labReusableSecurityEcharts', meta: { title: '网安可视化面板', icon: 'trend-charts' }, component: 'view/lab/reusable/security-echarts.vue' },
           { path: 'list-query-bar', name: 'labReusableListQueryBar', meta: { title: '列表查询栏', icon: 'search' }, component: 'view/lab/reusable/list-query-bar.vue' },
           { path: 'reliable-upload', name: 'labReusableReliableUpload', meta: { title: '可靠上报框架', icon: 'upload-filled' }, component: 'view/lab/reusable/reliable-upload.vue' }
         ]

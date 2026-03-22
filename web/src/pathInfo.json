@@ -10,6 +10,7 @@
   "/src/view/lab/reusable/list-query-bar.vue": "LabReusableListQueryBar",
   "/src/view/lab/reusable/overview.vue": "LabReusableOverview",
   "/src/view/lab/reusable/reliable-upload.vue": "LabReusableReliableUpload",
+  "/src/view/lab/reusable/security-echarts.vue": "LabReusableSecurityEcharts",
   "/src/view/lab/simulation/base-data-io.vue": "LabSimulationBaseDataIO",
   "/src/view/lab/simulation/index.vue": "LabSimulation",
   "/src/view/lab/simulation/overview.vue": "LabSimulationOverview",
