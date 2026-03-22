@@ -4,6 +4,7 @@
   "/src/view/lab/component-demo/index.vue": "LabComponentDemo",
   "/src/view/lab/component-demo/overview.vue": "LabComponentDemoOverview",
   "/src/view/lab/index.vue": "Lab",
+  "/src/view/lab/reusable/crud-form-dialog.vue": "LabReusableCrudFormDialog",
   "/src/view/lab/reusable/excel-io.vue": "LabReusableExcelIO",
   "/src/view/lab/reusable/index.vue": "LabReusable",
   "/src/view/lab/reusable/list-query-bar.vue": "LabReusableListQueryBar",

@@ -83,6 +83,7 @@ func (i *initMenuAuthority) DataInserted(ctx context.Context) bool {
 			"labReusable":               false,
 			"labReusableOverview":       false,
 			"labReusableExcelIO":        false,
+			"labReusableCrudFormDialog": false,
 			"labReusableListQueryBar":   false,
 			"labReusableReliableUpload": false,
 		}
