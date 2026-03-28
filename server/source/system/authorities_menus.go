@@ -87,6 +87,7 @@ func (i *initMenuAuthority) DataInserted(ctx context.Context) bool {
 			"labReusableSecurityEcharts": false,
 			"labReusableListQueryBar":    false,
 			"labReusableReliableUpload":  false,
+			"labReusableTablePro":        false,
 		}
 		for _, menu := range auth.SysBaseMenus {
 			if _, ok := requiredMenus[menu.Name]; ok {

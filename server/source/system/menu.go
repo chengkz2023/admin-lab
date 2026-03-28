@@ -56,7 +56,7 @@ func (i *initMenu) InitializeData(ctx context.Context) (next context.Context, er
 	}
 
 	menuNameMap := make(map[string]uint)
-	allMenus := make([]SysBaseMenu, 0, len(parentMenus)+16)
+	allMenus := make([]SysBaseMenu, 0, len(parentMenus)+20)
 
 	for _, menu := range parentMenus {
 		savedMenu, saveErr := ensureMenu(db, menu)
@@ -99,6 +99,7 @@ func (i *initMenu) InitializeData(ctx context.Context) (next context.Context, er
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "security-echarts", Name: "labReusableSecurityEcharts", Component: "view/lab/reusable/security-echarts.vue", Sort: 4, Meta: Meta{Title: "网安可视化面板", Icon: "trend-charts"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "list-query-bar", Name: "labReusableListQueryBar", Component: "view/lab/reusable/list-query-bar.vue", Sort: 5, Meta: Meta{Title: "列表查询栏", Icon: "search"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "reliable-upload", Name: "labReusableReliableUpload", Component: "view/lab/reusable/reliable-upload.vue", Sort: 6, Meta: Meta{Title: "可靠上报框架", Icon: "upload-filled"}},
+		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "table-pro", Name: "labReusableTablePro", Component: "view/lab/reusable/table-pro.vue", Sort: 7, Meta: Meta{Title: "Table Pro", Icon: "grid"}},
 	}
 
 	for _, menu := range grandchildMenus {
@@ -133,6 +134,7 @@ func (i *initMenu) DataInserted(ctx context.Context) bool {
 		"labReusableSecurityEcharts",
 		"labReusableListQueryBar",
 		"labReusableReliableUpload",
+		"labReusableTablePro",
 	}
 
 	if errors.Is(db.Where("path = ?", "admin").First(&SysBaseMenu{}).Error, gorm.ErrRecordNotFound) {
