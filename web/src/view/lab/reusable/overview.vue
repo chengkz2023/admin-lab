@@ -82,6 +82,7 @@
     { title: 'Excel 导入导出', description: '模板下载、批量导入、解析校验、错误反馈和数据导出。' },
     { title: '通用查询工具栏', description: '收拢筛选、重置、展开、导出、快捷搜索等常见交互。' },
     { title: '可配置表格能力', description: '列显隐、列顺序、固定列、批量操作和空状态处理。' },
+    { title: '复杂表格渲染组件', description: '面向监控、日志、巡检场景的 ElTablePro，支持多级表头、渲染器、详情抽屉和 Hook 分页。' },
     { title: '附件上传模块', description: '上传限制、回显、预览、重传和权限控制。' },
     { title: '图表容器组件', description: '统一卡片结构、筛选栏、空态、加载态和导出能力。' },
     { title: '业务状态组件', description: '统一状态标签、进度展示和不同业务的枚举映射。' }
