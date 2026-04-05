@@ -58,7 +58,8 @@ const staticMenus = [
           { path: 'list-query-bar', name: 'labReusableListQueryBar', meta: { title: '列表查询栏', icon: 'search' }, component: 'view/lab/reusable/list-query-bar.vue' },
           { path: 'table-pro', name: 'labReusableTablePro', meta: { title: 'Table Pro', icon: 'grid' }, component: 'view/lab/reusable/table-pro.vue' },
           { path: 'reliable-upload', name: 'labReusableReliableUpload', meta: { title: '可靠上报框架', icon: 'upload-filled' }, component: 'view/lab/reusable/reliable-upload.vue' },
-          { path: 'dict-usage', name: 'labReusableDictUsage', meta: { title: '字典消费组件', icon: 'collection-tag' }, component: 'view/lab/reusable/dict-usage.vue' }
+          { path: 'dict-usage', name: 'labReusableDictUsage', meta: { title: '字典消费组件', icon: 'collection-tag' }, component: 'view/lab/reusable/dict-usage.vue' },
+          { path: 'biz-log', name: 'labReusableBizLog', meta: { title: '业务操作日志', icon: 'document' }, component: 'view/lab/reusable/biz-log.vue' },
         ]
       }
     ]
