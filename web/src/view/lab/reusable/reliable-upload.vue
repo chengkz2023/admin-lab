@@ -7,17 +7,19 @@
         <p class="subtitle">{{ profile.summary }}</p>
       </div>
       <div class="hero-meta">
-        <el-tag type="success">已收录</el-tag>
+        <el-tag type="success">独立开源</el-tag>
         <el-tag type="primary">可迁移</el-tag>
         <el-tag>后端组件</el-tag>
+        <el-button
+          v-if="profile.githubUrl"
+          type="primary"
+          plain
+          size="small"
+          :icon="Link"
+          @click="openGithub"
+        >GitHub 仓库</el-button>
       </div>
     </div>
-
-    <el-alert
-      type="info"
-      :closable="false"
-      title="后端 example 包已收录 MySQL repo 完整示例，可查看 server/model/example/reliable_upload_demo.go 与 server/service/example/reliable_upload_demo.go。"
-    />
 
     <el-row :gutter="16">
       <el-col :xs="24" :lg="15">
@@ -27,7 +29,6 @@
               <span>核心能力</span>
               <div class="path-list">
                 <code>{{ profile.packagePath }}</code>
-                <code v-if="profile.documentPath">{{ profile.documentPath }}</code>
               </div>
             </div>
           </template>
@@ -135,7 +136,15 @@
         <el-card shadow="hover">
           <template #header>
             <div class="panel-header">
-              <span>收录文件</span>
+              <span>开源文件</span>
+              <el-button
+                v-if="profile.githubUrl"
+                link
+                type="primary"
+                size="small"
+                :icon="Link"
+                @click="openGithub"
+              >在 GitHub 查看</el-button>
             </div>
           </template>
           <div class="file-list">
@@ -172,6 +181,7 @@
 <script setup>
   import { onMounted, ref } from 'vue'
   import { ElMessage } from 'element-plus'
+  import { Link } from '@element-plus/icons-vue'
   import { getReliableUploadProfile } from '@/api/reliableUpload'
 
   defineOptions({
@@ -191,6 +201,10 @@
     } finally {
       loading.value = false
     }
+  }
+
+  const openGithub = () => {
+    window.open(profile.value.githubUrl, '_blank', 'noopener,noreferrer')
   }
 
   onMounted(() => {

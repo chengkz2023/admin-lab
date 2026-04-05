@@ -6,10 +6,11 @@ type ReliableUploadService struct{}
 
 func (r *ReliableUploadService) GetProfile() reusableRes.ReliableUploadProfile {
 	return reusableRes.ReliableUploadProfile{
-		Title:          "Reliable Upload Framework",
+		Title:          "Reliable Upload Kit",
 		Classification: "复用组件",
-		Summary:        "面向生产环境的后端文件上报框架，覆盖分钟任务、大任务和业务触发任务三种模型，并把备份文件作为重试唯一数据源。",
-		PackagePath:    "server/utils/reliableupload",
+		Summary:        "面向生产环境的后端文件上报框架，已作为独立开源项目维护。覆盖分钟任务、大任务和业务触发任务三种模型，以备份文件作为重试唯一数据源，接口与框架完全解耦，可按项目自行实现 Repo 层接入。",
+		GithubURL:      "https://github.com/chengkz2023/reliable-upload-kit",
+		PackagePath:    "github.com/chengkz2023/reliable-upload-kit",
 		DocumentPath:   "docs/reusable-reliable-upload.md",
 		CapabilityPoints: []string{
 			"生产与上报解耦，可分别调度 producer 和 uploader。",
@@ -37,6 +38,7 @@ func (r *ReliableUploadService) GetProfile() reusableRes.ReliableUploadProfile {
 			{Name: "TaskConfigRepo / UploadLogRepo / BigTaskRepo / BizTaskRepo", Signature: "配置与状态持久化仓储接口", Notes: []string{"框架不绑定具体 ORM，可按项目使用 GORM/MySQL 实现。", "admin-lab 当前先收录框架与接入说明，不强行引入具体表结构到系统库。"}},
 		},
 		IntegrationSteps: []string{
+			"go get github.com/chengkz2023/reliable-upload-kit 引入依赖。",
 			"在业务项目中实现 TaskConfigRepo 和对应状态表仓储。",
 			"为每个 task_code 注册 DataSource、Reporter，必要时补 FileNamer。",
 			"初始化 Engine，并在调度器中分别调用 RunProducer / RunUploader / OnStartup。",
@@ -44,7 +46,7 @@ func (r *ReliableUploadService) GetProfile() reusableRes.ReliableUploadProfile {
 			"把 backup 目录纳入运维监控，确保备份文件生命周期与重试策略匹配。",
 		},
 		MigrationNotes: []string{
-			"迁入内网时优先同步 server/utils/reliableupload 包，再按实际库表实现 repo。",
+			"在 go.mod 中引入 github.com/chengkz2023/reliable-upload-kit，再按实际库表实现 Repo 层。",
 			"如果内网已有上传/调度基础设施，可只复用 Engine、Registry、types 和接口契约。",
 			"backup 路径、远端目录、重试上限、文件命名规则建议全部改为项目配置项。",
 			"业务触发任务务必补唯一键和审计日志，避免重复触发带来脏数据。",
@@ -55,17 +57,17 @@ func (r *ReliableUploadService) GetProfile() reusableRes.ReliableUploadProfile {
 			{TaskCode: "order_biz", TaskType: "biz", BatchSize: 2000, MaxRetry: 3, SFTPSubdir: "/remote/order", FilePrefix: "order_biz"},
 		},
 		IncludedFiles: []reusableRes.ReliableUploadIncludedFile{
-			{Path: "server/utils/reliableupload/types.go", Role: "任务类型、状态、实体定义"},
-			{Path: "server/utils/reliableupload/interfaces.go", Role: "DataSource、Reporter、Repo 等核心契约"},
-			{Path: "server/utils/reliableupload/registry.go", Role: "task_code 级别注册中心"},
-			{Path: "server/utils/reliableupload/engine.go", Role: "生产、上传、恢复、重试主流程"},
-			{Path: "server/utils/reliableupload/biz_context.go", Role: "业务触发上下文透传"},
-			{Path: "server/utils/reliableupload/backup_fs.go", Role: "本地文件备份存储实现"},
+			{Path: "types.go", Role: "任务类型、状态、实体定义"},
+			{Path: "interfaces.go", Role: "DataSource、Reporter、Repo 等核心契约"},
+			{Path: "registry.go", Role: "task_code 级别注册中心"},
+			{Path: "engine.go", Role: "生产、上传、恢复、重试主流程"},
+			{Path: "biz_context.go", Role: "业务触发上下文透传"},
+			{Path: "backup_fs.go", Role: "本地文件备份存储实现"},
 		},
 		CodeSnippets: []reusableRes.ReliableUploadCodeSnippet{
 			{Title: "核心接口", Language: "go", Code: "type DataSource interface {\n    CountChunks(ctx context.Context, cfg TaskConfig, start, end time.Time) (int, error)\n    FetchChunk(ctx context.Context, cfg TaskConfig, start, end time.Time, index int) (Chunk, error)\n}\n\ntype Reporter interface {\n    Upload(ctx context.Context, cfg TaskConfig, item UploadItem) error\n}"},
-			{Title: "引擎初始化", Language: "go", Code: "registry := reliableupload.NewRegistry()\nregistry.RegisterDataSource(\"order_minute\", ds)\nregistry.RegisterReporter(\"order_minute\", rp)\n\nengine := reliableupload.NewEngine(\n    registry,\n    cfgRepo,\n    uploadLogRepo,\n    bigRepo,\n    bizRepo,\n    reliableupload.NewFSBackupStore(\"./backup\"),\n)\n\n_ = engine.RunProducer(ctx)\n_ = engine.RunUploader(ctx)"},
-			{Title: "业务触发任务", Language: "go", Code: "trigger, ok := reliableupload.BizTriggerFromContext(ctx)\nif ok {\n    fmt.Println(trigger.Key, trigger.Payload)\n}\n\n_ = engine.RunBizTask(ctx, \"order_biz\", \"approval_1001\", `{\"operator\":\"ops\"}`)"},
+			{Title: "引擎初始化", Language: "go", Code: "import kit \"github.com/chengkz2023/reliable-upload-kit\"\n\nregistry := kit.NewRegistry()\nregistry.RegisterDataSource(\"order_minute\", ds)\nregistry.RegisterReporter(\"order_minute\", rp)\n\nengine := kit.NewEngine(\n    registry,\n    cfgRepo,\n    uploadLogRepo,\n    bigRepo,\n    bizRepo,\n    kit.NewFSBackupStore(\"./backup\"),\n)\n\n_ = engine.RunProducer(ctx)\n_ = engine.RunUploader(ctx)"},
+			{Title: "业务触发任务", Language: "go", Code: "trigger, ok := kit.BizTriggerFromContext(ctx)\nif ok {\n    fmt.Println(trigger.Key, trigger.Payload)\n}\n\n_ = engine.RunBizTask(ctx, \"order_biz\", \"approval_1001\", `{\"operator\":\"ops\"}`)"},
 		},
 	}
 }

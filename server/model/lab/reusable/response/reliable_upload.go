@@ -4,6 +4,7 @@ type ReliableUploadProfile struct {
 	Title            string                        `json:"title"`
 	Classification   string                        `json:"classification"`
 	Summary          string                        `json:"summary"`
+	GithubURL        string                        `json:"githubUrl"`
 	PackagePath      string                        `json:"packagePath"`
 	DocumentPath     string                        `json:"documentPath"`
 	CapabilityPoints []string                      `json:"capabilityPoints"`

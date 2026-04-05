@@ -100,6 +100,8 @@ func (i *initMenu) InitializeData(ctx context.Context) (next context.Context, er
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "list-query-bar", Name: "labReusableListQueryBar", Component: "view/lab/reusable/list-query-bar.vue", Sort: 5, Meta: Meta{Title: "列表查询栏", Icon: "search"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "reliable-upload", Name: "labReusableReliableUpload", Component: "view/lab/reusable/reliable-upload.vue", Sort: 6, Meta: Meta{Title: "可靠上报框架", Icon: "upload-filled"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "table-pro", Name: "labReusableTablePro", Component: "view/lab/reusable/table-pro.vue", Sort: 7, Meta: Meta{Title: "Table Pro", Icon: "grid"}},
+		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "dict-usage", Name: "labReusableDictUsage", Component: "view/lab/reusable/dict-usage.vue", Sort: 8, Meta: Meta{Title: "字典消费组件", Icon: "collection-tag"}},
+		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "biz-log", Name: "labReusableBizLog", Component: "view/lab/reusable/biz-log.vue", Sort: 9, Meta: Meta{Title: "业务操作日志", Icon: "document"}},
 	}
 
 	for _, menu := range grandchildMenus {
@@ -135,6 +137,8 @@ func (i *initMenu) DataInserted(ctx context.Context) bool {
 		"labReusableListQueryBar",
 		"labReusableReliableUpload",
 		"labReusableTablePro",
+		"labReusableDictUsage",
+		"labReusableBizLog",
 	}
 
 	if errors.Is(db.Where("path = ?", "admin").First(&SysBaseMenu{}).Error, gorm.ErrRecordNotFound) {
