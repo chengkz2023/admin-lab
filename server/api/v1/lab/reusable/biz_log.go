@@ -2,6 +2,7 @@ package reusable
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/response"
 	"github.com/flipped-aurora/gin-vue-admin/server/utils"
@@ -58,8 +59,8 @@ func (b *BizLogApi) WriteDemo(c *gin.Context) {
 }
 
 func parsePositiveInt(s string) (int, error) {
-	var n int
-	if _, err := fmt.Sscanf(s, "%d", &n); err != nil || n < 1 {
+	n, err := strconv.Atoi(s)
+	if err != nil || n < 1 {
 		return 0, fmt.Errorf("invalid")
 	}
 	return n, nil
