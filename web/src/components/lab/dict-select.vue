@@ -11,26 +11,32 @@
 </template>
 
 <script setup>
-  import { ref, onMounted } from 'vue'
+  import { ref, watch } from 'vue'
   import { useDictionaryStore } from '@/pinia/modules/dictionary'
 
   defineOptions({ name: 'DictSelect', inheritAttrs: false })
 
   const props = defineProps({
-    dictType: { type: String, required: true }
+    dictType: { type: String, required: true },
+    depth:    { type: Number, default: 1 }
   })
 
   const dictStore = useDictionaryStore()
   const options = ref([])
   const loading = ref(false)
 
-  onMounted(async () => {
-    loading.value = true
-    try {
-      const items = await dictStore.getDictionary(props.dictType, 1)
-      options.value = items || []
-    } finally {
-      loading.value = false
-    }
-  })
+  watch(
+    () => props.dictType,
+    async (val) => {
+      if (!val) return
+      loading.value = true
+      try {
+        const items = await dictStore.getDictionary(val, props.depth)
+        options.value = items || []
+      } finally {
+        loading.value = false
+      }
+    },
+    { immediate: true }
+  )
 </script>
