@@ -30,7 +30,8 @@ func Record(ctx context.Context, e Entry) {
 			OperatorName: e.OperatorName,
 			Remark:       e.Remark,
 		}
-		if err := global.GVA_DB.WithContext(ctx).Create(&row).Error; err != nil {
+		writeCtx := context.WithoutCancel(ctx)
+		if err := global.GVA_DB.WithContext(writeCtx).Create(&row).Error; err != nil {
 			global.GVA_LOG.Warn("bizlog: write failed", zap.String("module", e.Module), zap.String("entityId", e.EntityID), zap.Error(err))
 		}
 	}()
