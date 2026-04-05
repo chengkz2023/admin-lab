@@ -79,7 +79,7 @@ bizlog.Record(ctx, bizlog.Entry{
   import { ref } from 'vue'
   import { ElMessage } from 'element-plus'
   import BizLogTimeline from '@/components/lab/biz-log-timeline.vue'
-  import service from '@/utils/request'
+  import { writeBizLogDemo } from '@/api/bizLog'
 
   defineOptions({ name: 'LabReusableBizLog' })
 
@@ -93,11 +93,7 @@ bizlog.Record(ctx, bizlog.Entry{
   const writeTestLog = async () => {
     writing.value = true
     try {
-      const res = await service({
-        url: '/bizLog/writeDemo',
-        method: 'post',
-        data: { module: demoModule.value, entityId: demoEntityId.value }
-      })
+      const res = await writeBizLogDemo({ module: demoModule.value, entityId: demoEntityId.value })
       if (res.code === 0) {
         ElMessage.success('测试日志已写入')
         refreshTimeline()
