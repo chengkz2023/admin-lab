@@ -22,13 +22,18 @@
     () => [props.dictType, props.value],
     async ([type, val]) => {
       if (!type) return
-      const items = await dictStore.getDictionary(type, 1)
-      const matched = (items || []).find((i) => String(i.value) === String(val))
-      if (matched) {
-        label.value = matched.label
-        tagType.value = VALID_TYPES.includes(matched.extend) ? matched.extend : ''
-      } else {
-        label.value = String(val)
+      try {
+        const items = await dictStore.getDictionary(type, 1)
+        const matched = (items || []).find((i) => String(i.value) === String(val))
+        if (matched) {
+          label.value = matched.label
+          tagType.value = VALID_TYPES.includes(matched.extend) ? matched.extend : ''
+        } else {
+          label.value = val != null ? String(val) : ''
+          tagType.value = ''
+        }
+      } catch {
+        label.value = val != null ? String(val) : ''
         tagType.value = ''
       }
     },
