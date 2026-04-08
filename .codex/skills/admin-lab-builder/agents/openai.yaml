@@ -1,0 +1,4 @@
+﻿interface:
+  display_name: "Admin Lab Builder"
+  short_description: "Build features in admin-lab with project-specific rules."
+  default_prompt: "Use $admin-lab-builder to add or refine an admin-lab module following the project handbook."

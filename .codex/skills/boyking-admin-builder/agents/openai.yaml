@@ -1,0 +1,4 @@
+interface:
+  display_name: "BoyKing Admin Builder"
+  short_description: "Bootstrap or build in the BoyKing Admin scaffold."
+  default_prompt: "Use $boyking-admin-builder to bootstrap or extend a BoyKing Admin project."
