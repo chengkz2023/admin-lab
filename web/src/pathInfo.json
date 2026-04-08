@@ -13,6 +13,7 @@
   "/src/view/lab/reusable/security-echarts.vue": "LabReusableSecurityEcharts",
   "/src/view/lab/reusable/table-pro.vue": "LabReusableTablePro",
   "/src/view/lab/simulation/base-data-io.vue": "LabSimulationBaseDataIO",
+  "/src/view/lab/simulation/cucode.vue": "Cucode",
   "/src/view/lab/simulation/index.vue": "LabSimulation",
   "/src/view/lab/simulation/overview.vue": "LabSimulationOverview",
   "/src/view/layout/aside/asideComponent/asyncSubmenu.vue": "AsyncSubmenu",
