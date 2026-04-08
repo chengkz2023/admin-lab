@@ -1,4 +1,0 @@
-interface:
-  display_name: "Admin Lab Handbook Builder"
-  short_description: "按项目手册落地 admin-lab 功能"
-  default_prompt: "基于 docs/project-handbook.md，帮我完成一个 admin-lab 实验室功能（含分区归类、代码落地、菜单权限种子和验证）。"

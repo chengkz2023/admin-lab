@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la server/*.go)",
+      "Bash(go build:*)",
+      "Bash(npx vue-tsc:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(ls /d/goworkspace/admin-lab/web/*.json)",
+      "Bash(ls /d/goworkspace/admin-lab/*.json)"
+    ]
+  }
+}
