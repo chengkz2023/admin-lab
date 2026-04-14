@@ -80,6 +80,7 @@ func (i *initMenuAuthority) DataInserted(ctx context.Context) bool {
 			"labSimulationBaseDataIO":    false,
 			"labComponentDemo":           false,
 			"labComponentDemoOverview":   false,
+			"labComponentDemoCharts":     false,
 			"labReusable":                false,
 			"labReusableOverview":        false,
 			"labReusableExcelIO":         false,
@@ -88,6 +89,7 @@ func (i *initMenuAuthority) DataInserted(ctx context.Context) bool {
 			"labReusableListQueryBar":    false,
 			"labReusableReliableUpload":  false,
 			"labReusableTablePro":        false,
+			"labReusableCharts":          false,
 			"labReusableDictUsage":       false,
 			"labReusableBizLog":          false,
 		}

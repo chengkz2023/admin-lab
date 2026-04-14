@@ -1,9 +1,11 @@
 {
   "/src/view/error/index.vue": "Error",
   "/src/view/error/reload.vue": "Reload",
+  "/src/view/lab/component-demo/charts.vue": "LabComponentDemoCharts",
   "/src/view/lab/component-demo/index.vue": "LabComponentDemo",
   "/src/view/lab/component-demo/overview.vue": "LabComponentDemoOverview",
   "/src/view/lab/index.vue": "Lab",
+  "/src/view/lab/reusable/charts.vue": "LabReusableCharts",
   "/src/view/lab/reusable/crud-form-dialog.vue": "LabReusableCrudFormDialog",
   "/src/view/lab/reusable/el-table-pro.vue": "LabReusableElTablePro",
   "/src/view/lab/reusable/excel-io.vue": "LabReusableExcelIO",
