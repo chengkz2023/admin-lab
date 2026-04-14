@@ -6,8 +6,10 @@ import (
 
 type RouterGroup struct {
 	BaseDataSimulationRouter
+	CustomerDetailSimulationRouter
 }
 
 var (
-	baseDataSimulationApi = api.ApiGroupApp.LabApiGroup.SimulationApiGroup.BaseDataSimulationApi
+	baseDataSimulationApi       = api.ApiGroupApp.LabApiGroup.SimulationApiGroup.BaseDataSimulationApi
+	customerDetailSimulationApi = api.ApiGroupApp.LabApiGroup.SimulationApiGroup.CustomerDetailSimulationApi
 )

@@ -66,6 +66,7 @@ func Routers() *gin.Engine {
 	exampleRouter.InitFileUploadAndDownloadRouter(privateGroup)
 	exampleRouter.InitAttachmentCategoryRouterRouter(privateGroup)
 	labRouter.SimulationRouterGroup.InitBaseDataSimulationRouter(privateGroup)
+	labRouter.SimulationRouterGroup.InitCustomerDetailSimulationRouter(privateGroup)
 	labRouter.ReusableRouterGroup.InitExcelIORouter(privateGroup)
 	labRouter.ReusableRouterGroup.InitReliableUploadRouter(privateGroup)
 	labRouter.ReusableRouterGroup.InitBizLogRouter(privateGroup)
