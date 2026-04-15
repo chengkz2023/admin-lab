@@ -103,15 +103,6 @@ func (i *initCasbin) InitializeData(ctx context.Context) (context.Context, error
 
 		{Ptype: "p", V0: "888", V1: "/jwt/jsonInBlacklist", V2: "POST"},
 
-		{Ptype: "p", V0: "888", V1: "/system/getSystemConfig", V2: "POST"},
-		{Ptype: "p", V0: "888", V1: "/system/setSystemConfig", V2: "POST"},
-
-		{Ptype: "p", V0: "888", V1: "/customer/customer", V2: "GET"},
-		{Ptype: "p", V0: "888", V1: "/customer/customer", V2: "PUT"},
-		{Ptype: "p", V0: "888", V1: "/customer/customer", V2: "POST"},
-		{Ptype: "p", V0: "888", V1: "/customer/customer", V2: "DELETE"},
-		{Ptype: "p", V0: "888", V1: "/customer/customerList", V2: "GET"},
-
 		{Ptype: "p", V0: "888", V1: "/sysDictionaryDetail/findSysDictionaryDetail", V2: "GET"},
 		{Ptype: "p", V0: "888", V1: "/sysDictionaryDetail/updateSysDictionaryDetail", V2: "PUT"},
 		{Ptype: "p", V0: "888", V1: "/sysDictionaryDetail/createSysDictionaryDetail", V2: "POST"},
@@ -131,28 +122,13 @@ func (i *initCasbin) InitializeData(ctx context.Context) (context.Context, error
 		{Ptype: "p", V0: "888", V1: "/sysDictionary/exportSysDictionary", V2: "GET"},
 
 		{Ptype: "p", V0: "888", V1: "/sysOperationRecord/findSysOperationRecord", V2: "GET"},
-		{Ptype: "p", V0: "888", V1: "/sysOperationRecord/updateSysOperationRecord", V2: "PUT"},
-		{Ptype: "p", V0: "888", V1: "/sysOperationRecord/createSysOperationRecord", V2: "POST"},
 		{Ptype: "p", V0: "888", V1: "/sysOperationRecord/getSysOperationRecordList", V2: "GET"},
 		{Ptype: "p", V0: "888", V1: "/sysOperationRecord/deleteSysOperationRecord", V2: "DELETE"},
 		{Ptype: "p", V0: "888", V1: "/sysOperationRecord/deleteSysOperationRecordByIds", V2: "DELETE"},
 
-		{Ptype: "p", V0: "888", V1: "/simpleUploader/upload", V2: "POST"},
-		{Ptype: "p", V0: "888", V1: "/simpleUploader/checkFileMd5", V2: "GET"},
-		{Ptype: "p", V0: "888", V1: "/simpleUploader/mergeFileMd5", V2: "GET"},
-
 		{Ptype: "p", V0: "888", V1: "/authorityBtn/setAuthorityBtn", V2: "POST"},
 		{Ptype: "p", V0: "888", V1: "/authorityBtn/getAuthorityBtn", V2: "POST"},
 		{Ptype: "p", V0: "888", V1: "/authorityBtn/canRemoveAuthorityBtn", V2: "POST"},
-
-
-		{Ptype: "p", V0: "888", V1: "/sysError/createSysError", V2: "POST"},
-		{Ptype: "p", V0: "888", V1: "/sysError/deleteSysError", V2: "DELETE"},
-		{Ptype: "p", V0: "888", V1: "/sysError/deleteSysErrorByIds", V2: "DELETE"},
-		{Ptype: "p", V0: "888", V1: "/sysError/updateSysError", V2: "PUT"},
-		{Ptype: "p", V0: "888", V1: "/sysError/findSysError", V2: "GET"},
-		{Ptype: "p", V0: "888", V1: "/sysError/getSysErrorList", V2: "GET"},
-		{Ptype: "p", V0: "888", V1: "/sysError/getSysErrorSolution", V2: "GET"},
 
 		{Ptype: "p", V0: "888", V1: "/sysParams/createSysParams", V2: "POST"},
 		{Ptype: "p", V0: "888", V1: "/sysParams/deleteSysParams", V2: "DELETE"},
@@ -164,14 +140,6 @@ func (i *initCasbin) InitializeData(ctx context.Context) (context.Context, error
 		{Ptype: "p", V0: "888", V1: "/attachmentCategory/getCategoryList", V2: "GET"},
 		{Ptype: "p", V0: "888", V1: "/attachmentCategory/addCategory", V2: "POST"},
 		{Ptype: "p", V0: "888", V1: "/attachmentCategory/deleteCategory", V2: "POST"},
-
-		{Ptype: "p", V0: "888", V1: "/sysVersion/findSysVersion", V2: "GET"},
-		{Ptype: "p", V0: "888", V1: "/sysVersion/getSysVersionList", V2: "GET"},
-		{Ptype: "p", V0: "888", V1: "/sysVersion/downloadVersionJson", V2: "GET"},
-		{Ptype: "p", V0: "888", V1: "/sysVersion/exportVersion", V2: "POST"},
-		{Ptype: "p", V0: "888", V1: "/sysVersion/importVersion", V2: "POST"},
-		{Ptype: "p", V0: "888", V1: "/sysVersion/deleteSysVersion", V2: "DELETE"},
-		{Ptype: "p", V0: "888", V1: "/sysVersion/deleteSysVersionByIds", V2: "DELETE"},
 
 		{Ptype: "p", V0: "8881", V1: "/user/admin_register", V2: "POST"},
 		{Ptype: "p", V0: "8881", V1: "/api/createApi", V2: "POST"},
@@ -204,13 +172,6 @@ func (i *initCasbin) InitializeData(ctx context.Context) (context.Context, error
 		{Ptype: "p", V0: "8881", V1: "/casbin/updateCasbin", V2: "POST"},
 		{Ptype: "p", V0: "8881", V1: "/casbin/getPolicyPathByAuthorityId", V2: "POST"},
 		{Ptype: "p", V0: "8881", V1: "/jwt/jsonInBlacklist", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/system/getSystemConfig", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/system/setSystemConfig", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/customer/customer", V2: "POST"},
-		{Ptype: "p", V0: "8881", V1: "/customer/customer", V2: "PUT"},
-		{Ptype: "p", V0: "8881", V1: "/customer/customer", V2: "DELETE"},
-		{Ptype: "p", V0: "8881", V1: "/customer/customer", V2: "GET"},
-		{Ptype: "p", V0: "8881", V1: "/customer/customerList", V2: "GET"},
 		{Ptype: "p", V0: "8881", V1: "/user/getUserInfo", V2: "GET"},
 
 		{Ptype: "p", V0: "9528", V1: "/user/admin_register", V2: "POST"},
@@ -246,13 +207,6 @@ func (i *initCasbin) InitializeData(ctx context.Context) (context.Context, error
 		{Ptype: "p", V0: "9528", V1: "/casbin/updateCasbin", V2: "POST"},
 		{Ptype: "p", V0: "9528", V1: "/casbin/getPolicyPathByAuthorityId", V2: "POST"},
 		{Ptype: "p", V0: "9528", V1: "/jwt/jsonInBlacklist", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/system/getSystemConfig", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/system/setSystemConfig", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/customer/customer", V2: "PUT"},
-		{Ptype: "p", V0: "9528", V1: "/customer/customer", V2: "GET"},
-		{Ptype: "p", V0: "9528", V1: "/customer/customer", V2: "POST"},
-		{Ptype: "p", V0: "9528", V1: "/customer/customer", V2: "DELETE"},
-		{Ptype: "p", V0: "9528", V1: "/customer/customerList", V2: "GET"},
 		{Ptype: "p", V0: "9528", V1: "/user/getUserInfo", V2: "GET"},
 	}
 	if err := db.Create(&entities).Error; err != nil {

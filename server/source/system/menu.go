@@ -95,7 +95,6 @@ func (i *initMenu) InitializeData(ctx context.Context) (next context.Context, er
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labSimulation"], Path: "customer-detail", Name: "labSimulationCustomerDetail", Component: "view/lab/simulation/customer-detail.vue", Sort: 3, Meta: Meta{Title: "客户详情仿真", Icon: "user-filled"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labComponentDemo"], Path: "overview", Name: "labComponentDemoOverview", Component: "view/lab/component-demo/overview.vue", Sort: 1, Meta: Meta{Title: "概览", Icon: "tickets"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labComponentDemo"], Path: "charts", Name: "labComponentDemoCharts", Component: "view/lab/component-demo/charts.vue", Sort: 2, Meta: Meta{Title: "通用图表示例", Icon: "histogram"}},
-		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labSimulation"], Path: "customer-detail", Name: "labSimulationCustomerDetail", Component: "view/lab/simulation/customer-detail.vue", Sort: 3, Meta: Meta{Title: "??????", Icon: "user-filled"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "overview", Name: "labReusableOverview", Component: "view/lab/reusable/overview.vue", Sort: 1, Meta: Meta{Title: "概览", Icon: "tickets"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "excel-io", Name: "labReusableExcelIO", Component: "view/lab/reusable/excel-io.vue", Sort: 2, Meta: Meta{Title: "Excel 实验面板", Icon: "document-copy"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "crud-form-dialog", Name: "labReusableCrudFormDialog", Component: "view/lab/reusable/crud-form-dialog.vue", Sort: 3, Meta: Meta{Title: "新增编辑弹窗", Icon: "edit-pen"}},
@@ -107,8 +106,6 @@ func (i *initMenu) InitializeData(ctx context.Context) (next context.Context, er
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "biz-log", Name: "labReusableBizLog", Component: "view/lab/reusable/biz-log.vue", Sort: 9, Meta: Meta{Title: "业务操作日志", Icon: "document"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "dir-file-pipeline", Name: "labReusableDirFilePipeline", Component: "view/lab/reusable/dir-file-pipeline.vue", Sort: 10, Meta: Meta{Title: "目录文件处理流水线", Icon: "folder-opened"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "charts", Name: "labReusableCharts", Component: "view/lab/reusable/charts.vue", Sort: 8, Meta: Meta{Title: "通用图表组件", Icon: "histogram"}},
-		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "dict-usage", Name: "labReusableDictUsage", Component: "view/lab/reusable/dict-usage.vue", Sort: 9, Meta: Meta{Title: "字典消费组件", Icon: "collection-tag"}},
-		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "biz-log", Name: "labReusableBizLog", Component: "view/lab/reusable/biz-log.vue", Sort: 10, Meta: Meta{Title: "业务操作日志", Icon: "document"}},
 	}
 
 	for _, menu := range grandchildMenus {
