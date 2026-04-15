@@ -6,6 +6,7 @@ import (
 
 type RouterGroup struct {
 	BizLogRouter
+	DirFilePipelineRouter
 	ExcelIORouter
 	ReliableUploadRouter
 	SecurityDashboardRouter
@@ -14,6 +15,7 @@ type RouterGroup struct {
 
 var (
 	bizLogApi            = api.ApiGroupApp.LabApiGroup.ReusableApiGroup.BizLogApi
+	dirFilePipelineApi   = api.ApiGroupApp.LabApiGroup.ReusableApiGroup.DirFilePipelineApi
 	excelIOApi           = api.ApiGroupApp.LabApiGroup.ReusableApiGroup.ExcelIOApi
 	reliableUploadApi    = api.ApiGroupApp.LabApiGroup.ReusableApiGroup.ReliableUploadApi
 	securityDashboardApi = api.ApiGroupApp.LabApiGroup.ReusableApiGroup.SecurityDashboardApi
