@@ -33,6 +33,7 @@ func initializeSystem() {
 	global.GVA_DB = initialize.Gorm()
 	initialize.Timer()
 	initialize.SetupHandlers()
+	initialize.Fileflow()
 	if global.GVA_DB != nil {
 		initialize.RegisterTables()
 		initialize.EnsureSystemSeedData()
