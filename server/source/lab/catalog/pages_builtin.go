@@ -158,7 +158,7 @@ func init() {
 			Name:      "labReusableTablePro",
 			Component: "view/lab/reusable/table-pro.vue",
 			Sort:      7,
-			Title:     "Table Pro",
+			Title:     "ElTablePro",
 			Icon:      "grid",
 		},
 		APIs: []APIItem{
