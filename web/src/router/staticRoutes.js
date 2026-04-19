@@ -43,7 +43,8 @@ const staticMenus = [
         meta: { title: '组件示例', icon: 'magic-stick' },
         component: 'view/routerHolder.vue',
         children: [
-          { path: 'overview', name: 'labComponentDemoOverview', meta: { title: '概览', icon: 'tickets' }, component: 'view/lab/component-demo/overview.vue' }
+          { path: 'overview', name: 'labComponentDemoOverview', meta: { title: '概览', icon: 'tickets' }, component: 'view/lab/component-demo/overview.vue' },
+          { path: 'charts', name: 'labComponentDemoCharts', meta: { title: '通用图表示例', icon: 'histogram' }, component: 'view/lab/component-demo/charts.vue' }
         ]
       },
       {
@@ -58,6 +59,8 @@ const staticMenus = [
           { path: 'security-echarts', name: 'labReusableSecurityEcharts', meta: { title: '网安可视化面板', icon: 'trend-charts' }, component: 'view/lab/reusable/security-echarts.vue' },
           { path: 'list-query-bar', name: 'labReusableListQueryBar', meta: { title: '列表查询栏', icon: 'search' }, component: 'view/lab/reusable/list-query-bar.vue' },
           { path: 'table-pro', name: 'labReusableTablePro', meta: { title: 'Table Pro', icon: 'grid' }, component: 'view/lab/reusable/table-pro.vue' },
+          { path: 'charts', name: 'labReusableCharts', meta: { title: '通用图表组件', icon: 'histogram' }, component: 'view/lab/reusable/charts.vue' },
+          { path: 'el-table-pro', name: 'labReusableElTablePro', meta: { title: 'ElTablePro', icon: 'grid' }, component: 'view/lab/reusable/el-table-pro.vue' },
           { path: 'reliable-upload', name: 'labReusableReliableUpload', meta: { title: '可靠上报框架', icon: 'upload-filled' }, component: 'view/lab/reusable/reliable-upload.vue' },
           { path: 'dict-usage', name: 'labReusableDictUsage', meta: { title: '字典消费组件', icon: 'collection-tag' }, component: 'view/lab/reusable/dict-usage.vue' },
           { path: 'biz-log', name: 'labReusableBizLog', meta: { title: '业务操作日志', icon: 'document' }, component: 'view/lab/reusable/biz-log.vue' },

@@ -43,6 +43,7 @@
     { title: '高级表格', description: '列配置、固定列、汇总、虚拟滚动、批量操作。' },
     { title: '富文本与附件', description: '编辑器、预览、上传限制、回显和权限控制。' },
     { title: '图表与可视化', description: '折线图、柱状图、联动筛选、空数据态和导出。' },
+    { title: '通用图表示例', description: '集中演示 TrendChart 与 PieChart 的 props、事件、图形切换和边界表现。' },
     { title: '拖拽与排序', description: '拖拽卡片、拖拽列表、可视化布局编排。' },
     { title: '复杂表单', description: '联动字段、动态区块、步骤表单和校验封装。' },
     { title: '文档能力', description: 'Excel、PDF、Word 预览、导入、导出和模板下载。' }
