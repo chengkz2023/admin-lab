@@ -64,15 +64,19 @@ func (i *initMenuAuthority) DataInserted(ctx context.Context) bool {
 	if !ok {
 		return false
 	}
-	auth := &sysModel.SysAuthority{}
-	if ret := db.Model(auth).
-		Where("authority_id = ?", 9528).Preload("SysBaseMenus").Find(auth); ret != nil {
-		if ret.Error != nil {
+
+	requiredAuthorityIDs := []uint{888, 9528, 8881}
+	for _, authorityID := range requiredAuthorityIDs {
+		auth := &sysModel.SysAuthority{}
+		ret := db.Model(auth).
+			Where("authority_id = ?", authorityID).Preload("SysBaseMenus").Find(auth)
+		if ret == nil || ret.Error != nil {
 			return false
 		}
 		if len(auth.SysBaseMenus) == 0 {
 			return false
 		}
+
 		requiredMenus := map[string]bool{
 			"lab":                        false,
 			"labSimulation":              false,
@@ -102,9 +106,8 @@ func (i *initMenuAuthority) DataInserted(ctx context.Context) bool {
 				return false
 			}
 		}
-		return true
 	}
-	return false
+	return true
 }
 
 func loadAuthorities(ctx context.Context, db *gorm.DB) ([]sysModel.SysAuthority, error) {
