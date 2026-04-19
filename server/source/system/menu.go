@@ -92,6 +92,7 @@ func (i *initMenu) InitializeData(ctx context.Context) (next context.Context, er
 	grandchildMenus := []SysBaseMenu{
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labSimulation"], Path: "overview", Name: "labSimulationOverview", Component: "view/lab/simulation/overview.vue", Sort: 1, Meta: Meta{Title: "概览", Icon: "tickets"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labSimulation"], Path: "base-data-io", Name: "labSimulationBaseDataIO", Component: "view/lab/simulation/base-data-io.vue", Sort: 2, Meta: Meta{Title: "基础数据导入导出仿真", Icon: "document-copy"}},
+		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labSimulation"], Path: "cucode", Name: "labSimulationCucode", Component: "view/lab/simulation/cucode.vue", Sort: 3, Meta: Meta{Title: "代码表管理", Icon: "memo"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labComponentDemo"], Path: "overview", Name: "labComponentDemoOverview", Component: "view/lab/component-demo/overview.vue", Sort: 1, Meta: Meta{Title: "概览", Icon: "tickets"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "overview", Name: "labReusableOverview", Component: "view/lab/reusable/overview.vue", Sort: 1, Meta: Meta{Title: "概览", Icon: "tickets"}},
 		{MenuLevel: 2, Hidden: false, ParentId: menuNameMap["labReusable"], Path: "excel-io", Name: "labReusableExcelIO", Component: "view/lab/reusable/excel-io.vue", Sort: 2, Meta: Meta{Title: "Excel 实验面板", Icon: "document-copy"}},
@@ -127,6 +128,7 @@ func (i *initMenu) DataInserted(ctx context.Context) bool {
 		"labSimulation",
 		"labSimulationOverview",
 		"labSimulationBaseDataIO",
+		"labSimulationCucode",
 		"labComponentDemo",
 		"labComponentDemoOverview",
 		"labReusable",

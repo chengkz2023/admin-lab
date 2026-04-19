@@ -78,6 +78,7 @@ func (i *initMenuAuthority) DataInserted(ctx context.Context) bool {
 			"labSimulation":              false,
 			"labSimulationOverview":      false,
 			"labSimulationBaseDataIO":    false,
+			"labSimulationCucode":        false,
 			"labComponentDemo":           false,
 			"labComponentDemoOverview":   false,
 			"labReusable":                false,

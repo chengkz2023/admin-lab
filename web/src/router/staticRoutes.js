@@ -33,7 +33,8 @@ const staticMenus = [
         component: 'view/routerHolder.vue',
         children: [
           { path: 'overview', name: 'labSimulationOverview', meta: { title: '概览', icon: 'tickets' }, component: 'view/lab/simulation/overview.vue' },
-          { path: 'base-data-io', name: 'labSimulationBaseDataIO', meta: { title: '基础数据导入导出仿真', icon: 'document-copy' }, component: 'view/lab/simulation/base-data-io.vue' }
+          { path: 'base-data-io', name: 'labSimulationBaseDataIO', meta: { title: '基础数据导入导出仿真', icon: 'document-copy' }, component: 'view/lab/simulation/base-data-io.vue' },
+          { path: 'cucode', name: 'labSimulationCucode', meta: { title: '代码表管理', icon: 'memo' }, component: 'view/lab/simulation/cucode.vue' }
         ]
       },
       {
