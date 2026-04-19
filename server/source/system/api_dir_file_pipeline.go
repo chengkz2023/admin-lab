@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-const initOrderApiDirFilePipeline = initOrderApiBizLog + 1
+const initOrderApiDirFilePipeline = initOrderApiIgnore + 1
 
 type initApiDirFilePipeline struct{}
 

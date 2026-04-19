@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-const initOrderApiCustomerDetailSimulation = initOrderApiTablePro + 1
+const initOrderApiCustomerDetailSimulation = initOrderApiDirFilePipeline + 1
 
 type initApiCustomerDetailSimulation struct{}
 

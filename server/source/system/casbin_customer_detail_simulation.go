@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-const initOrderCasbinCustomerDetailSimulation = initOrderCasbinTablePro + 1
+const initOrderCasbinCustomerDetailSimulation = initOrderCasbinDirFilePipeline + 1
 
 type initCasbinCustomerDetailSimulation struct{}
 

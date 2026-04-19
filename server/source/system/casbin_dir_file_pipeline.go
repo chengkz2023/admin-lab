@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-const initOrderCasbinDirFilePipeline = initOrderCasbinBizLog + 1
+const initOrderCasbinDirFilePipeline = initOrderCasbin + 1
 
 type initCasbinDirFilePipeline struct{}
 
