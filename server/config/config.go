@@ -11,4 +11,5 @@ type Server struct {
 	Mysql    Mysql    `mapstructure:"mysql" json:"mysql" yaml:"mysql"`
 	Local    Local    `mapstructure:"local" json:"local" yaml:"local"`
 	Cors     CORS     `mapstructure:"cors" json:"cors" yaml:"cors"`
+	Fileflow Fileflow `mapstructure:"fileflow" json:"fileflow" yaml:"fileflow"`
 }

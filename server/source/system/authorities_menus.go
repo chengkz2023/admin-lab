@@ -9,7 +9,9 @@ import (
 	"gorm.io/gorm"
 )
 
-const initOrderMenuAuthority = initOrderMenu + initOrderAuthority
+// Keep role-menu binding at the end of system seed stage so all menus
+// (including lab seeds from other source packages) are already present.
+const initOrderMenuAuthority = system.InitOrderSystem + 900
 
 type initMenuAuthority struct{}
 
@@ -64,50 +66,28 @@ func (i *initMenuAuthority) DataInserted(ctx context.Context) bool {
 	if !ok {
 		return false
 	}
-	auth := &sysModel.SysAuthority{}
-	if ret := db.Model(auth).
-		Where("authority_id = ?", 9528).Preload("SysBaseMenus").Find(auth); ret != nil {
-		if ret.Error != nil {
-			return false
-		}
-		if len(auth.SysBaseMenus) == 0 {
-			return false
-		}
-		requiredMenus := map[string]bool{
-			"lab":                         false,
-			"labSimulation":               false,
-			"labSimulationOverview":       false,
-			"labSimulationBaseDataIO":     false,
-			"labComponentDemo":            false,
-			"labSimulationCustomerDetail": false,
-			"labComponentDemoOverview":    false,
-			"labComponentDemoCharts":      false,
-			"labReusable":                 false,
-			"labReusableOverview":         false,
-			"labReusableExcelIO":          false,
-			"labReusableCrudFormDialog":   false,
-			"labReusableSecurityEcharts":  false,
-			"labReusableListQueryBar":     false,
-			"labReusableReliableUpload":   false,
-			"labReusableTablePro":         false,
-			"labReusableCharts":           false,
-			"labReusableDictUsage":        false,
-			"labReusableBizLog":           false,
-			"labReusableDirFilePipeline":  false,
-		}
-		for _, menu := range auth.SysBaseMenus {
-			if _, ok := requiredMenus[menu.Name]; ok {
-				requiredMenus[menu.Name] = true
-			}
-		}
-		for _, exists := range requiredMenus {
-			if !exists {
-				return false
-			}
-		}
-		return true
+
+	var totalMenus int64
+	if err := db.Model(&sysModel.SysBaseMenu{}).Count(&totalMenus).Error; err != nil {
+		return false
 	}
-	return false
+	if totalMenus == 0 {
+		return false
+	}
+
+	requiredAuthorityIDs := []uint{888, 9528, 8881}
+	for _, authorityID := range requiredAuthorityIDs {
+		auth := &sysModel.SysAuthority{}
+		ret := db.Model(auth).
+			Where("authority_id = ?", authorityID).Preload("SysBaseMenus").First(auth)
+		if ret == nil || ret.Error != nil {
+			return false
+		}
+		if int64(len(auth.SysBaseMenus)) < totalMenus {
+			return false
+		}
+	}
+	return true
 }
 
 func loadAuthorities(ctx context.Context, db *gorm.DB) ([]sysModel.SysAuthority, error) {

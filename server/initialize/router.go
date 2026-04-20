@@ -68,7 +68,6 @@ func Routers() *gin.Engine {
 	labRouter.SimulationRouterGroup.InitBaseDataSimulationRouter(privateGroup)
 	labRouter.SimulationRouterGroup.InitCustomerDetailSimulationRouter(privateGroup)
 	labRouter.ReusableRouterGroup.InitExcelIORouter(privateGroup)
-	labRouter.ReusableRouterGroup.InitDirFilePipelineRouter(privateGroup)
 	labRouter.ReusableRouterGroup.InitReliableUploadRouter(privateGroup)
 	labRouter.ReusableRouterGroup.InitBizLogRouter(privateGroup)
 	labRouter.ReusableRouterGroup.InitSecurityDashboardRouter(privateGroup)

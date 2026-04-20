@@ -70,6 +70,20 @@ local:
   path: uploads/file
   store-path: uploads/file
 
+fileflow:
+  enable: false
+  watch-dir: ""
+  output-dir: ""
+  failed-dir: ""
+  interval: 1s
+  timeout: 30s
+  backoff-base: 500ms
+  after-process: move
+  concurrency: 4
+  max-retries: 3
+  event-buffer: 64
+  ignore-hidden: true
+
 # clickhouse:
 #   addr: 127.0.0.1:9000
 #   database: boyking_admin

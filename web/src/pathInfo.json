@@ -9,7 +9,6 @@
   "/src/view/lab/reusable/charts.vue": "LabReusableCharts",
   "/src/view/lab/reusable/crud-form-dialog.vue": "LabReusableCrudFormDialog",
   "/src/view/lab/reusable/dict-usage.vue": "LabReusableDictUsage",
-  "/src/view/lab/reusable/dir-file-pipeline.vue": "LabReusableDirFilePipeline",
   "/src/view/lab/reusable/el-table-pro.vue": "LabReusableElTablePro",
   "/src/view/lab/reusable/excel-io.vue": "LabReusableExcelIO",
   "/src/view/lab/reusable/index.vue": "LabReusable",
