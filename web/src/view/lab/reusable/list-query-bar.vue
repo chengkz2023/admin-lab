@@ -202,7 +202,7 @@
       prop: 'status',
       label: '状态',
       type: 'select',
-      span: 6,
+      span: 8,
       options: [
         { label: '待处理', value: 'pending' },
         { label: '处理中', value: 'processing' },
@@ -213,7 +213,7 @@
       prop: 'owner',
       label: '负责人',
       type: 'select',
-      span: 6,
+      span: 8,
       options: [
         { label: '张楠', value: '张楠' },
         { label: '李聪', value: '李聪' },
@@ -225,7 +225,7 @@
       label: '来源系统',
       type: 'select',
       multiple: true,
-      span: 6,
+      span: 8,
       options: [
         { label: '运营平台', value: '运营平台' },
         { label: '渠道系统', value: '渠道系统' },
@@ -280,7 +280,7 @@
     { label: '处理中', value: 'processing' },
     { label: '已完成', value: 'done' }
   ],
-  span: 6
+  span: 8
 }`,
     selectMultiple: `{
   prop: 'source',
@@ -293,7 +293,7 @@
     { label: '大数据平台', value: '大数据平台' }
   ],
   defaultValue: [],
-  span: 6
+  span: 8
 }`,
     cascaderMultiple: `{
   prop: 'regionPath',
@@ -323,9 +323,9 @@
 }`,
     fullItems: `const queryItems = [
   { prop: 'keyword', label: '关键字', type: 'input', placeholder: '订单号 / 客户名称 / 手机号', span: 8 },
-  { prop: 'status', label: '状态', type: 'select', options: statusOptions, span: 6 },
-  { prop: 'owner', label: '负责人', type: 'select', options: ownerOptions, span: 6 },
-  { prop: 'source', label: '来源系统', type: 'select', multiple: true, options: sourceOptions, defaultValue: [], span: 6 },
+  { prop: 'status', label: '状态', type: 'select', options: statusOptions, span: 8 },
+  { prop: 'owner', label: '负责人', type: 'select', options: ownerOptions, span: 8 },
+  { prop: 'source', label: '来源系统', type: 'select', multiple: true, options: sourceOptions, defaultValue: [], span: 8 },
   { prop: 'regionPath', label: '区域', type: 'cascader', multiple: true, options: regionOptions, emitPath: true, cascaderProps: { value: 'value', label: 'label', children: 'children' }, defaultValue: [], span: 8 },
   { prop: 'createdDateRange', label: '创建日期', type: 'dateRange', startPlaceholder: '开始日期', endPlaceholder: '结束日期', defaultValue: [], span: 8 }
 ]`

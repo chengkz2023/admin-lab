@@ -163,12 +163,61 @@
 
   const expanded = ref(false)
 
-  const needToggle = computed(() => props.items.length > props.maxVisible)
+  const resolveSpan = (item) => {
+    const span = Number(item?.lg || item?.span || 6)
+    if (!Number.isFinite(span) || span <= 0) {
+      return 6
+    }
+    return Math.min(span, 24)
+  }
+
+  const splitItemsIntoRows = (items) => {
+    const rows = []
+    let currentRow = []
+    let currentSpan = 0
+
+    items.forEach((item) => {
+      const span = resolveSpan(item)
+      if (currentRow.length && currentSpan + span > 24) {
+        rows.push(currentRow)
+        currentRow = [item]
+        currentSpan = span
+        return
+      }
+      currentRow.push(item)
+      currentSpan += span
+    })
+
+    if (currentRow.length) {
+      rows.push(currentRow)
+    }
+
+    return rows
+  }
+
+  const collapsedItems = computed(() => {
+    const rows = splitItemsIntoRows(props.items)
+    const result = []
+    let visibleCount = 0
+
+    rows.some((row) => {
+      if (result.length && visibleCount + row.length > props.maxVisible) {
+        return true
+      }
+      result.push(...row)
+      visibleCount += row.length
+      return false
+    })
+
+    return result
+  })
+
+  const needToggle = computed(() => props.items.length > collapsedItems.value.length)
   const visibleItems = computed(() => {
     if (expanded.value || !needToggle.value) {
       return props.items
     }
-    return props.items.slice(0, props.maxVisible)
+    return collapsedItems.value
   })
 
   const innerModel = computed(() => props.modelValue || {})
