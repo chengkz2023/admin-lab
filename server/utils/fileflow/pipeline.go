@@ -14,7 +14,7 @@ type Pipeline struct {
 	dispatcher *Dispatcher
 }
 
-// New 创建并初始化 fileflow 流水线。
+// New 创建 fileflow 流水线。
 func New(cfg Config) (*Pipeline, error) {
 	var err error
 	cfg, err = defaultConfig(cfg)
@@ -22,19 +22,15 @@ func New(cfg Config) (*Pipeline, error) {
 		return nil, err
 	}
 
-	writer := &ResultWriter{
-		outputDir:  cfg.OutputDir,
-		afterWrite: cfg.AfterProcess,
-		doneDir:    filepath.Join(cfg.WatchDir, "done"),
+	defaultHook := &DefaultHook{
+		DoneDir:    filepath.Join(cfg.WatchDir, "done"),
+		FailedDir:  cfg.FailedDir,
+		AfterWrite: cfg.AfterProcess,
+		Logger:     cfg.Logger,
 	}
-
 	dispatcher := &Dispatcher{
-		writer: writer,
-		sem:    semaphore.NewWeighted(int64(cfg.Concurrency)),
-		errHandler: &DefaultErrorHandler{
-			FailedDir: cfg.FailedDir,
-			Logger:    cfg.Logger,
-		},
+		hook:           defaultHook,
+		sem:            semaphore.NewWeighted(int64(cfg.Concurrency)),
 		retryPolicy:    cfg.RetryPolicy,
 		processTimeout: cfg.ProcessTimeout,
 	}
@@ -46,36 +42,32 @@ func New(cfg Config) (*Pipeline, error) {
 	}, nil
 }
 
-// Use 注册业务 Processor（按注册顺序匹配）。
+// Use 注册单个业务 Processor，后续调用会覆盖前一次注册。
 func (p *Pipeline) Use(proc Processor) *Pipeline {
-	p.dispatcher.processors = append(p.dispatcher.processors, proc)
+	p.dispatcher.processor = proc
 	return p
 }
 
-// UseMiddleware 注册中间件。
+// UseMiddleware 注册包裹 Processor.Process 的中间件。
 func (p *Pipeline) UseMiddleware(m Middleware) *Pipeline {
-	p.dispatcher.middlewares = append(p.dispatcher.middlewares, m)
-	return p
-}
-
-// WithPostProcessor 设置可选后置处理器。
-func (p *Pipeline) WithPostProcessor(pp PostProcessor) *Pipeline {
-	p.dispatcher.writer.postProcessor = pp
-	return p
-}
-
-// WithErrorHandler 自定义错误处理器。
-func (p *Pipeline) WithErrorHandler(errHandler ErrorHandler) *Pipeline {
-	if errHandler != nil {
-		p.dispatcher.errHandler = errHandler
+	if m != nil {
+		p.dispatcher.middlewares = append(p.dispatcher.middlewares, m)
 	}
 	return p
 }
 
-// Run 启动流水线并阻塞到 ctx 取消或事件消费结束。
+// WithHook 替换流水线 Hook。
+func (p *Pipeline) WithHook(hook Hook) *Pipeline {
+	if hook != nil {
+		p.dispatcher.hook = hook
+	}
+	return p
+}
+
+// Run 启动流水线，并阻塞到 ctx 取消或事件消费完成。
 func (p *Pipeline) Run(ctx context.Context) error {
-	if len(p.dispatcher.processors) == 0 {
-		return errors.New("fileflow: no processors registered")
+	if p.dispatcher.processor == nil {
+		return errors.New("fileflow: no processor registered")
 	}
 	events := p.watcher.Watch(ctx)
 	p.dispatcher.Dispatch(ctx, events)

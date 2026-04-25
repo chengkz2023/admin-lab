@@ -9,16 +9,15 @@ import (
 )
 
 type Dispatcher struct {
-	processors     []Processor
+	processor      Processor
 	middlewares    []Middleware
-	writer         *ResultWriter
-	errHandler     ErrorHandler
+	hook           Hook
 	sem            *semaphore.Weighted
 	retryPolicy    RetryPolicy
 	processTimeout time.Duration
 }
 
-// Dispatch 消费事件并按并发上限调度处理，退出前会等待在途任务完成。
+// Dispatch 消费事件，并按并发上限调度处理。
 func (d *Dispatcher) Dispatch(ctx context.Context, events <-chan FileEvent) {
 	var wg sync.WaitGroup
 	defer wg.Wait()
@@ -44,15 +43,12 @@ func (d *Dispatcher) Dispatch(ctx context.Context, events <-chan FileEvent) {
 	}
 }
 
-// handle 执行单文件处理流程：匹配 Processor -> 中间件链 -> 重试 -> 写结果/错误处理。
 func (d *Dispatcher) handle(ctx context.Context, event FileEvent) {
-	proc := d.match(event)
-	if proc == nil {
+	if d.processor == nil {
 		return
 	}
 
-	chain := d.buildChain(proc)
-
+	chain := d.buildChain(d.processor)
 	var result Result
 	var err error
 
@@ -81,27 +77,19 @@ func (d *Dispatcher) handle(ctx context.Context, event FileEvent) {
 	}
 
 	if err != nil {
-		d.errHandler.Handle(ctx, event, err)
+		if d.hook != nil {
+			d.hook.OnError(ctx, event, err)
+		}
 		return
 	}
 
-	result.SourceEvent = event
-	if werr := d.writer.Write(ctx, result); werr != nil {
-		d.errHandler.Handle(ctx, event, werr)
-	}
-}
-
-// match 按注册顺序找到首个可处理该文件的 Processor。
-func (d *Dispatcher) match(e FileEvent) Processor {
-	for _, p := range d.processors {
-		if p.Match(e) {
-			return p
+	if d.hook != nil {
+		if hookErr := d.hook.OnSuccess(ctx, event, result); hookErr != nil {
+			d.hook.OnError(ctx, event, hookErr)
 		}
 	}
-	return nil
 }
 
-// waitContext 在可取消上下文中等待 backoff 时间。
 func waitContext(ctx context.Context, delay time.Duration) bool {
 	t := time.NewTimer(delay)
 	defer t.Stop()

@@ -75,6 +75,8 @@ fileflow:
   watch-dir: ""
   output-dir: ""
   failed-dir: ""
+  ready-strategy: rename
+  ok-suffix: .ok
   interval: 1s
   timeout: 30s
   backoff-base: 500ms

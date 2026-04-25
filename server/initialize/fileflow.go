@@ -7,7 +7,6 @@ import (
 	"log/slog"
 	"path/filepath"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/config"
@@ -16,74 +15,69 @@ import (
 	"go.uber.org/zap"
 )
 
-var fileflowRuntime struct {
-	mu     sync.Mutex
-	cancel context.CancelFunc
-}
-
-// Fileflow 按配置启动 fileflow 管道（默认关闭）。
+// Fileflow 是项目内 fileflow 流水线的统一装配入口。
+//
+// 设计约定：一个目录对应一个独立 Pipeline；这里只负责编排多条流水线，
+// 不引入 Manager，也不使用全局注册表。等出现真实业务 Processor 后，
+// 在本函数中显式创建各自的 fileflow，并由 main 初始化流程统一触发。
 func Fileflow() {
 	cfg := global.GVA_CONFIG.Fileflow
 	if !cfg.Enable {
 		return
 	}
-
-	// 拿到业务侧已注册的处理器与扩展点。
-	processors, middlewares, postProcessor := fileflow.SnapshotRegistered()
-	if len(processors) == 0 {
-		zap.L().Warn("fileflow is enabled but no processor was registered")
-		return
-	}
-
-	ffCfg, err := buildFileflowConfig(cfg)
-	if err != nil {
+	if _, err := BuildFileflowConfig(cfg); err != nil {
 		zap.L().Error("failed to build fileflow config", zap.Error(err))
 		return
 	}
 
-	pipeline, err := fileflow.New(ffCfg)
-	if err != nil {
-		zap.L().Error("failed to initialize fileflow pipeline", zap.Error(err))
+	// 当前项目尚未接入真实业务 Processor，所以下面仅保留未来接入示例。
+	// 后续可按目录拆成 initXXXFileflow() 小函数，保持每条流水线边界清晰。
+	//
+	// ctx := context.Background()
+	//
+	// csvCfg, err := BuildFileflowConfig(global.GVA_CONFIG.Fileflow)
+	// if err != nil {
+	// 	zap.L().Error("failed to build csv fileflow config", zap.Error(err))
+	// 	return
+	// }
+	// csvCfg.WatchDir = filepath.Clean("/data/input/csv")
+	// csvCfg.Filter = fileflow.AndFilter(csvCfg.Filter, fileflow.ExtFilter(".csv"))
+	// csvFlow, err := fileflow.New(csvCfg)
+	// if err != nil {
+	// 	zap.L().Error("failed to create csv fileflow", zap.Error(err))
+	// 	return
+	// }
+	// csvFlow.Use(&CSVProcessor{})
+	// StartFileflowPipeline(ctx, csvFlow)
+	//
+	// pcapCfg, err := BuildFileflowConfig(global.GVA_CONFIG.Fileflow)
+	// if err != nil {
+	// 	zap.L().Error("failed to build pcap fileflow config", zap.Error(err))
+	// 	return
+	// }
+	// pcapCfg.WatchDir = filepath.Clean("/data/input/pcap")
+	// pcapCfg.Filter = fileflow.AndFilter(pcapCfg.Filter, fileflow.ExtFilter(".pcap"))
+	// pcapCfg.ReadyStrategy = fileflow.OKFileReady{}
+	// pcapFlow, err := fileflow.New(pcapCfg)
+	// if err != nil {
+	// 	zap.L().Error("failed to create pcap fileflow", zap.Error(err))
+	// 	return
+	// }
+	// pcapFlow.Use(&PcapArchiveProcessor{})
+	// StartFileflowPipeline(ctx, pcapFlow)
+
+	zap.L().Info("fileflow is enabled, waiting for explicit business pipelines")
+}
+
+// StopFileflow 保留兼容入口；v2 不再维护全局 fileflow 运行实例。
+func StopFileflow() {}
+
+// StartFileflowPipeline 使用传入的 ctx 独立启动一个 fileflow 流水线。
+// 调用方负责为每条流水线维护自己的 ctx/cancel 生命周期。
+func StartFileflowPipeline(ctx context.Context, p *fileflow.Pipeline) {
+	if p == nil {
 		return
 	}
-
-	// 先挂内置中间件，再挂业务自定义中间件。
-	pipeline.
-		UseMiddleware(fileflow.RecoverMiddleware()).
-		UseMiddleware(fileflow.LoggingMiddleware(ffCfg.Logger))
-
-	for _, m := range middlewares {
-		pipeline.UseMiddleware(m)
-	}
-	for _, p := range processors {
-		pipeline.Use(p)
-	}
-	if postProcessor != nil {
-		pipeline.WithPostProcessor(postProcessor)
-	}
-
-	startFileflow(pipeline)
-}
-
-// StopFileflow 停止当前运行中的 fileflow 管道。
-func StopFileflow() {
-	fileflowRuntime.mu.Lock()
-	defer fileflowRuntime.mu.Unlock()
-	if fileflowRuntime.cancel != nil {
-		fileflowRuntime.cancel()
-		fileflowRuntime.cancel = nil
-	}
-}
-
-// startFileflow 在独立协程中启动管道。
-func startFileflow(p *fileflow.Pipeline) {
-	StopFileflow()
-
-	fileflowRuntime.mu.Lock()
-	ctx, cancel := context.WithCancel(context.Background())
-	fileflowRuntime.cancel = cancel
-	fileflowRuntime.mu.Unlock()
-
 	go func() {
 		err := p.Run(ctx)
 		if err != nil && !errors.Is(err, context.Canceled) {
@@ -92,13 +86,10 @@ func startFileflow(p *fileflow.Pipeline) {
 	}()
 }
 
-// buildFileflowConfig 将 YAML 配置转换为运行时 Config。
-func buildFileflowConfig(cfg config.Fileflow) (fileflow.Config, error) {
+// BuildFileflowConfig 将应用层 fileflow 配置转换为组件运行时配置。
+func BuildFileflowConfig(cfg config.Fileflow) (fileflow.Config, error) {
 	if strings.TrimSpace(cfg.WatchDir) == "" {
 		return fileflow.Config{}, errors.New("fileflow: watch-dir is required when enabled")
-	}
-	if strings.TrimSpace(cfg.OutputDir) == "" {
-		return fileflow.Config{}, errors.New("fileflow: output-dir is required when enabled")
 	}
 
 	interval, err := parseDurationOrDefault(cfg.Interval, time.Second)
@@ -117,8 +108,11 @@ func buildFileflowConfig(cfg config.Fileflow) (fileflow.Config, error) {
 	if err != nil {
 		return fileflow.Config{}, err
 	}
+	readyStrategy, err := parseReadyStrategy(cfg.ReadyStrategy, cfg.OKSuffix)
+	if err != nil {
+		return fileflow.Config{}, err
+	}
 
-	// 默认不过滤；ignore-hidden=true 时过滤隐藏文件。
 	filter := func(name string) bool { return true }
 	if cfg.IgnoreHidden {
 		filter = func(name string) bool { return !strings.HasPrefix(name, ".") }
@@ -126,12 +120,12 @@ func buildFileflowConfig(cfg config.Fileflow) (fileflow.Config, error) {
 
 	ffCfg := fileflow.Config{
 		WatchDir:       filepath.Clean(cfg.WatchDir),
-		OutputDir:      filepath.Clean(cfg.OutputDir),
 		Interval:       interval,
 		Concurrency:    cfg.Concurrency,
 		EventBuffer:    cfg.EventBuffer,
 		ProcessTimeout: timeout,
 		Filter:         filter,
+		ReadyStrategy:  readyStrategy,
 		AfterProcess:   afterProcess,
 		RetryPolicy: fileflow.RetryPolicy{
 			MaxRetries: cfg.MaxRetries,
@@ -145,7 +139,6 @@ func buildFileflowConfig(cfg config.Fileflow) (fileflow.Config, error) {
 	return ffCfg, nil
 }
 
-// parseDurationOrDefault 解析 duration 字符串，空值时回退默认值。
 func parseDurationOrDefault(raw string, defaultValue time.Duration) (time.Duration, error) {
 	if strings.TrimSpace(raw) == "" {
 		return defaultValue, nil
@@ -153,10 +146,20 @@ func parseDurationOrDefault(raw string, defaultValue time.Duration) (time.Durati
 	return time.ParseDuration(raw)
 }
 
-// parseAfterProcess 解析源文件后处理策略。
+func parseReadyStrategy(raw, okSuffix string) (fileflow.ReadyStrategy, error) {
+	switch strings.ToLower(strings.TrimSpace(raw)) {
+	case "", "rename", "rename-ready":
+		return fileflow.RenameReady{}, nil
+	case "ok", "ok-file", "ok-file-ready":
+		return fileflow.OKFileReady{Suffix: okSuffix}, nil
+	default:
+		return nil, fmt.Errorf("fileflow: unsupported ready-strategy %q", raw)
+	}
+}
+
 func parseAfterProcess(raw string) (fileflow.AfterWriteAction, error) {
 	switch strings.ToLower(strings.TrimSpace(raw)) {
-	case "", "move", "move-to-processed":
+	case "", "move", "move-to-processed", "archive", "archive-only":
 		return fileflow.MoveToProcessed, nil
 	case "delete":
 		return fileflow.DeleteSource, nil

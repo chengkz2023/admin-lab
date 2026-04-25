@@ -4,32 +4,32 @@ import (
 	"errors"
 	"log/slog"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
 type Config struct {
-	// WatchDir 为输入目录，必须配置。
+	// WatchDir 为轮询输入目录。
 	WatchDir string
-	// OutputDir 为输出目录，必须配置。
-	OutputDir string
-
-	// FailedDir 为失败文件目录，默认 WatchDir/failed。
+	// FailedDir 存放重试后仍失败的源文件。
 	FailedDir string
-	// Interval 为扫描间隔。
+	// Interval 为目录轮询间隔。
 	Interval time.Duration
-	// Concurrency 为并发处理上限。
+	// Concurrency 限制并发处理数量。
 	Concurrency int
-	// EventBuffer 为 watcher 事件通道缓冲区大小。
+	// EventBuffer 为 watcher 事件通道缓冲大小。
 	EventBuffer int
-	// ProcessTimeout 为单文件处理超时时间。
+	// ProcessTimeout 限制单次处理调用耗时。
 	ProcessTimeout time.Duration
-	// Filter 用于按文件名过滤输入文件。
+	// Filter 判断文件名是否进入处理候选集。
 	Filter func(string) bool
-	// AfterProcess 控制处理成功后的源文件动作。
+	// ReadyStrategy 判断发现的文件是否已就绪可处理。
+	ReadyStrategy ReadyStrategy
+	// AfterProcess 控制默认 Hook 在处理成功后的源文件动作。
 	AfterProcess AfterWriteAction
 	// RetryPolicy 控制处理失败后的重试策略。
 	RetryPolicy RetryPolicy
-	// Logger 为日志实现，未配置时使用 slog.Default。
+	// Logger 接收框架日志。
 	Logger *slog.Logger
 }
 
@@ -42,6 +42,8 @@ const (
 	DeleteSource
 	// KeepSource 保留源文件。
 	KeepSource
+	// ArchiveOnly 是 MoveToProcessed 的语义别名，适用于只归档源文件的处理器。
+	ArchiveOnly
 )
 
 type RetryPolicy struct {
@@ -49,7 +51,7 @@ type RetryPolicy struct {
 	Backoff    func(attempt int) time.Duration
 }
 
-// ExponentialBackoff 返回指数退避函数。
+// ExponentialBackoff 返回指数退避重试间隔函数。
 func ExponentialBackoff(base time.Duration) func(attempt int) time.Duration {
 	return func(attempt int) time.Duration {
 		if attempt < 1 {
@@ -59,13 +61,40 @@ func ExponentialBackoff(base time.Duration) func(attempt int) time.Duration {
 	}
 }
 
-// defaultConfig 补齐默认值并校验关键字段。
+// ExtFilter 返回按一个或多个扩展名过滤文件名的函数。
+func ExtFilter(exts ...string) func(string) bool {
+	allowed := make(map[string]struct{}, len(exts))
+	for _, ext := range exts {
+		if strings.TrimSpace(ext) == "" {
+			continue
+		}
+		if !strings.HasPrefix(ext, ".") {
+			ext = "." + ext
+		}
+		allowed[strings.ToLower(ext)] = struct{}{}
+	}
+	return func(name string) bool {
+		_, ok := allowed[strings.ToLower(filepath.Ext(name))]
+		return ok
+	}
+}
+
+// AndFilter 用逻辑与组合多个过滤器，nil 过滤器会被忽略。
+func AndFilter(filters ...func(string) bool) func(string) bool {
+	return func(name string) bool {
+		for _, filter := range filters {
+			if filter != nil && !filter(name) {
+				return false
+			}
+		}
+		return true
+	}
+}
+
+// defaultConfig 补齐默认值并校验必要字段。
 func defaultConfig(cfg Config) (Config, error) {
 	if cfg.WatchDir == "" {
 		return cfg, errors.New("fileflow: watch dir is required")
-	}
-	if cfg.OutputDir == "" {
-		return cfg, errors.New("fileflow: output dir is required")
 	}
 	if cfg.Interval <= 0 {
 		cfg.Interval = time.Second
@@ -81,6 +110,9 @@ func defaultConfig(cfg Config) (Config, error) {
 	}
 	if cfg.FailedDir == "" {
 		cfg.FailedDir = filepath.Join(cfg.WatchDir, "failed")
+	}
+	if cfg.ReadyStrategy == nil {
+		cfg.ReadyStrategy = RenameReady{}
 	}
 	if cfg.Logger == nil {
 		cfg.Logger = slog.Default()
