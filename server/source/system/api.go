@@ -101,15 +101,6 @@ func (i *initApi) InitializeData(ctx context.Context) (context.Context, error) {
 		{ApiGroup: "文件上传与下载", Method: "POST", Path: "/fileUploadAndDownload/getFileList", Description: "获取上传文件列表"},
 		{ApiGroup: "文件上传与下载", Method: "POST", Path: "/fileUploadAndDownload/importURL", Description: "导入URL"},
 
-		{ApiGroup: "系统服务", Method: "POST", Path: "/system/getSystemConfig", Description: "获取配置文件内容"},
-		{ApiGroup: "系统服务", Method: "POST", Path: "/system/setSystemConfig", Description: "设置配置文件内容"},
-
-		{ApiGroup: "客户", Method: "PUT", Path: "/customer/customer", Description: "更新客户"},
-		{ApiGroup: "客户", Method: "POST", Path: "/customer/customer", Description: "创建客户"},
-		{ApiGroup: "客户", Method: "DELETE", Path: "/customer/customer", Description: "删除客户"},
-		{ApiGroup: "客户", Method: "GET", Path: "/customer/customer", Description: "获取单一客户"},
-		{ApiGroup: "客户", Method: "GET", Path: "/customer/customerList", Description: "获取客户列表"},
-
 		{ApiGroup: "系统字典详情", Method: "PUT", Path: "/sysDictionaryDetail/updateSysDictionaryDetail", Description: "更新字典内容"},
 		{ApiGroup: "系统字典详情", Method: "POST", Path: "/sysDictionaryDetail/createSysDictionaryDetail", Description: "新增字典内容"},
 		{ApiGroup: "系统字典详情", Method: "DELETE", Path: "/sysDictionaryDetail/deleteSysDictionaryDetail", Description: "删除字典内容"},
@@ -129,28 +120,14 @@ func (i *initApi) InitializeData(ctx context.Context) (context.Context, error) {
 		{ApiGroup: "系统字典", Method: "POST", Path: "/sysDictionary/importSysDictionary", Description: "导入字典JSON"},
 		{ApiGroup: "系统字典", Method: "GET", Path: "/sysDictionary/exportSysDictionary", Description: "导出字典JSON"},
 
-		{ApiGroup: "操作记录", Method: "POST", Path: "/sysOperationRecord/createSysOperationRecord", Description: "新增操作记录"},
 		{ApiGroup: "操作记录", Method: "GET", Path: "/sysOperationRecord/findSysOperationRecord", Description: "根据ID获取操作记录"},
 		{ApiGroup: "操作记录", Method: "GET", Path: "/sysOperationRecord/getSysOperationRecordList", Description: "获取操作记录列表"},
 		{ApiGroup: "操作记录", Method: "DELETE", Path: "/sysOperationRecord/deleteSysOperationRecord", Description: "删除操作记录"},
 		{ApiGroup: "操作记录", Method: "DELETE", Path: "/sysOperationRecord/deleteSysOperationRecordByIds", Description: "批量删除操作历史"},
 
-		{ApiGroup: "断点续传(插件版)", Method: "POST", Path: "/simpleUploader/upload", Description: "插件版分片上传"},
-		{ApiGroup: "断点续传(插件版)", Method: "GET", Path: "/simpleUploader/checkFileMd5", Description: "文件完整度验证"},
-		{ApiGroup: "断点续传(插件版)", Method: "GET", Path: "/simpleUploader/mergeFileMd5", Description: "上传完成合并文件"},
-
 		{ApiGroup: "按钮权限", Method: "POST", Path: "/authorityBtn/setAuthorityBtn", Description: "设置按钮权限"},
 		{ApiGroup: "按钮权限", Method: "POST", Path: "/authorityBtn/getAuthorityBtn", Description: "获取已有按钮权限"},
 		{ApiGroup: "按钮权限", Method: "POST", Path: "/authorityBtn/canRemoveAuthorityBtn", Description: "删除按钮"},
-
-
-		{ApiGroup: "错误日志", Method: "POST", Path: "/sysError/createSysError", Description: "新建错误日志"},
-		{ApiGroup: "错误日志", Method: "DELETE", Path: "/sysError/deleteSysError", Description: "删除错误日志"},
-		{ApiGroup: "错误日志", Method: "DELETE", Path: "/sysError/deleteSysErrorByIds", Description: "批量删除错误日志"},
-		{ApiGroup: "错误日志", Method: "PUT", Path: "/sysError/updateSysError", Description: "更新错误日志"},
-		{ApiGroup: "错误日志", Method: "GET", Path: "/sysError/findSysError", Description: "根据ID获取错误日志"},
-		{ApiGroup: "错误日志", Method: "GET", Path: "/sysError/getSysErrorList", Description: "获取错误日志列表"},
-		{ApiGroup: "错误日志", Method: "GET", Path: "/sysError/getSysErrorSolution", Description: "触发错误处理(异步)"},
 
 		{ApiGroup: "参数管理", Method: "POST", Path: "/sysParams/createSysParams", Description: "新建参数"},
 		{ApiGroup: "参数管理", Method: "DELETE", Path: "/sysParams/deleteSysParams", Description: "删除参数"},
@@ -162,14 +139,6 @@ func (i *initApi) InitializeData(ctx context.Context) (context.Context, error) {
 		{ApiGroup: "媒体库分类", Method: "GET", Path: "/attachmentCategory/getCategoryList", Description: "分类列表"},
 		{ApiGroup: "媒体库分类", Method: "POST", Path: "/attachmentCategory/addCategory", Description: "添加/编辑分类"},
 		{ApiGroup: "媒体库分类", Method: "POST", Path: "/attachmentCategory/deleteCategory", Description: "删除分类"},
-
-		{ApiGroup: "版本控制", Method: "GET", Path: "/sysVersion/findSysVersion", Description: "获取单一版本"},
-		{ApiGroup: "版本控制", Method: "GET", Path: "/sysVersion/getSysVersionList", Description: "获取版本列表"},
-		{ApiGroup: "版本控制", Method: "GET", Path: "/sysVersion/downloadVersionJson", Description: "下载版本json"},
-		{ApiGroup: "版本控制", Method: "POST", Path: "/sysVersion/exportVersion", Description: "创建版本"},
-		{ApiGroup: "版本控制", Method: "POST", Path: "/sysVersion/importVersion", Description: "同步版本"},
-		{ApiGroup: "版本控制", Method: "DELETE", Path: "/sysVersion/deleteSysVersion", Description: "删除版本"},
-		{ApiGroup: "版本控制", Method: "DELETE", Path: "/sysVersion/deleteSysVersionByIds", Description: "批量删除版本"},
 	}
 	if err := db.Create(&entities).Error; err != nil {
 		return ctx, errors.Wrap(err, sysModel.SysApi{}.TableName()+"表数据初始化失败!")
