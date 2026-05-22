@@ -1,15 +1,14 @@
 <template>
   <div
-    class="el-table-pro-wrapper dark:bg-slate-800"
+    class="el-table-pro-wrapper"
     :class="{ 'is-empty': !Array.isArray(data) || data.length === 0 }"
   >
-    <!-- 顶部工具栏插槽 -->
-    <div v-if="$slots.toolbar" class="px-4 pb-2 pt-4">
+    <div v-if="$slots.toolbar" class="el-table-pro-toolbar">
       <slot name="toolbar" />
     </div>
 
     <el-table
-      class="rounded-md"
+      class="el-table-pro"
       :data="data"
       v-bind="$attrs"
       header-cell-class-name="el-table-pro-header-cell--custom"
@@ -17,19 +16,13 @@
       size="small"
       :height="height"
     >
-      <!--
-        启动递归渲染：
-        - 循环顶层列配置。
-        - 将 ProTable 的 $slots 作为 prop 传递给 ColumnRenderer。
-      -->
       <ColumnRenderer
         v-for="column in columns"
-        :key="column.label"
+        :key="column.prop || column.label || column.type"
         :column="column"
         :table-slots="$slots"
       />
 
-      <!-- 2. 检查是否存在 'actions' 插槽，如果存在，则渲染一个固定的操作列 -->
       <el-table-column
         v-if="$slots.actions || showDetail"
         v-bind="actionsSlotConfig"
@@ -44,21 +37,16 @@
           >
             <el-icon :size="12" class="el-icon--left"><Document /></el-icon>
           </el-button>
-
-          <!-- 将 'actions' 插槽的内容渲染到这里 -->
-          <!-- 并将 row 和 $index 作为作用域参数传出 -->
           <slot name="actions" :row="row" :index="$index" />
         </template>
       </el-table-column>
 
-      <!-- 空状态 -->
       <template #empty>
-        <span class="text-xl">暂无数据</span>
+        <span class="el-table-pro-empty">暂无数据</span>
       </template>
     </el-table>
 
-    <!-- 分页器 -->
-    <div v-if="showPagination" class="flex justify-end px-2">
+    <div v-if="showPagination" class="el-table-pro-pagination">
       <el-pagination
         :current-page="currentPage"
         :page-size="pageSize"
@@ -80,87 +68,74 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
-import ColumnRenderer from "./renderers/ColumnRenderer.vue";
-import DetailViewer from "@/components/ElTablePro/renderers/DetailViewer.vue";
-import { Document } from "@element-plus/icons-vue";
+import { computed, onMounted, ref } from 'vue'
+import { Document } from '@element-plus/icons-vue'
+import ColumnRenderer from './renderers/ColumnRenderer.vue'
+import DetailViewer from '@/components/ElTablePro/renderers/DetailViewer.vue'
 
-// --- Props & Emits ---
 const props = defineProps({
   data: { type: Array, required: true },
   columns: { type: Array, required: true },
   showPagination: { type: Boolean, default: true },
-  height: { type: [Number, String], default: "800" },
+  height: { type: [Number, String], default: '800' },
   total: { type: Number, default: 0 },
   currentPage: { type: Number, default: 1 },
   pageSize: { type: Number, default: 20 },
   pageSizes: { type: Array, default: () => [20, 25, 50, 100] },
-  layout: { type: String, default: "total, sizes, prev, pager, next, jumper" },
+  layout: { type: String, default: 'total, sizes, prev, pager, next, jumper' },
   actionsConfig: {
     type: Object,
     default: () => ({
-      width: 140,
-    }),
+      width: 140
+    })
   },
-  showDetail: { type: Boolean, default: false },
-});
+  showDetail: { type: Boolean, default: false }
+})
+
 const emit = defineEmits([
-  "update:currentPage",
-  "update:pageSize",
-  "page-change",
-]);
+  'update:currentPage',
+  'update:pageSize',
+  'page-change'
+])
 
 const handlePageChange = (type, value) => {
-  if (type === "currentPage") emit("update:currentPage", value);
-  if (type === "pageSize") emit("update:pageSize", value);
+  if (type === 'currentPage') emit('update:currentPage', value)
+  if (type === 'pageSize') emit('update:pageSize', value)
+  emit('page-change')
+}
 
-  emit("page-change");
-};
+const actionsSlotConfig = computed(() => ({
+  label: '操作',
+  width: 120,
+  align: 'center',
+  fixed: 'right',
+  ...props.actionsConfig
+}))
 
-const actionsSlotConfig = computed(() => {
-  const defaults = {
-    label: "操作",
-    width: 120,
-    align: "center",
-    fixed: "right",
-  };
+const detailVisible = ref(false)
+const detailRow = ref({})
 
-  return { ...defaults, ...props.actionsConfig };
-});
-
-const detailVisible = ref(false);
-const detailRow = ref({});
 const openDetail = (row) => {
-  detailRow.value = { ...row };
-  detailVisible.value = true;
-};
+  detailRow.value = { ...row }
+  detailVisible.value = true
+}
 
 onMounted(() => {
-  emit("update:currentPage", props.currentPage);
-  emit("update:pageSize", props.pageSize);
-});
+  emit('update:currentPage', props.currentPage)
+  emit('update:pageSize', props.pageSize)
+})
 </script>
 
 <style scoped>
-/*
- * ==========================================================================
- *  ElTablePro 样式作用域
- * ==========================================================================
- *  使用 `scoped` 属性确保此组件的样式不会泄露到全局，也不会被全局样式轻易污染。
- *  使用 `:deep()` 伪类选择器来“穿透”作用域，以修改子组件（Element Plus）的内部样式。
- *  所有针对子组件的样式都以根组件的 .el-table-pro-wrapper 类作为起点，增加了样式的特异性，
- *  确保能覆盖 Element Plus 的默认样式。
- * ==========================================================================
- */
+.el-table-pro-wrapper {
+  background: var(--el-bg-color);
+  color: var(--el-text-color-primary);
+}
 
-/*
- * --------------------------------------------------------------------------
- *  1. 全局结构重置 (Structural Resets)
- * --------------------------------------------------------------------------
- */
+.el-table-pro-toolbar {
+  padding: 16px 16px 8px;
+}
 
-/* 移除 Element Plus 在表格外部和分组时可能添加的伪元素边框线 */
-/* 这让我们的自定义边框系统成为唯一的视觉标准，使外观更统一、干净 */
 .el-table-pro-wrapper :deep(.el-table--border::after),
 .el-table-pro-wrapper :deep(.el-table--group::after),
 .el-table-pro-wrapper :deep(.el-table::before) {
@@ -168,143 +143,154 @@ onMounted(() => {
 }
 
 .el-table-pro-wrapper :deep(.el-table__inner-wrapper) {
-  @apply border rounded-md border-slate-200 dark:border-slate-700 !important;
+  overflow: hidden;
   box-sizing: border-box;
+  border: 1px solid var(--el-border-color-lighter);
+  border-radius: var(--el-border-radius-base);
 }
 
-.el-table-pro-wrapper :deep(.el-table__empty-block) {
-  @apply dark:bg-slate-800 overflow-x-hidden !important;
+.el-table-pro-wrapper :deep(.el-table),
+.el-table-pro-wrapper :deep(.el-table__empty-block),
+.el-table-pro-wrapper :deep(.el-table__body td.el-table__cell),
+.el-table-pro-wrapper :deep(.el-table__fixed-right),
+.el-table-pro-wrapper :deep(.el-table__fixed-left) {
+  background: var(--el-bg-color) !important;
+}
+
+.el-table-pro-wrapper :deep(.el-table) {
+  --el-table-header-bg-color: var(--el-fill-color-light);
+  --el-table-header-text-color: var(--el-text-color-primary);
+  --el-table-border-color: var(--el-border-color-lighter);
+  --el-table-row-hover-bg-color: var(--el-fill-color-lighter);
 }
 
 .el-table-pro-wrapper.is-empty :deep(.el-scrollbar__bar.is-horizontal) {
   display: none !important;
 }
 
-/*
- * --------------------------------------------------------------------------
- *  2. 表头样式 (Header Styling)
- * --------------------------------------------------------------------------
- */
-
-/*
-  【核心】自定义表头单元格的样式
-  通过 `header-cell-class-name` prop 应用
-*/
 .el-table-pro-wrapper :deep(.el-table-pro-header-cell--custom) {
-  /*
-   * 背景与文字:
-   * - bg-slate-50: 使用一个非常柔和、不刺眼的浅灰色作为背景。
-   * - text-slate-500: 文字颜色稍暗，与背景形成舒适的对比度。
-   * - font-medium: 适中的字重，既有强调效果又不过于粗重。
-   */
-  @apply bg-gray-300 text-slate-800 font-bold dark:bg-slate-700 dark:text-slate-300 !important;
-
-  /*
-   * 边距与字体:
-   * - py-3: 增加垂直内边距，使表头呼吸感更强，更显专业。
-   * - px-4: 设定水平内边距 (1rem / 16px)。
-   * - text-sm: 设定字体大小为 14px，这是UI表格中常见的、易读的尺寸。
-   */
-  @apply text-sm !important;
-
-  /*
-   * 边框:
-   * - border-b border-slate-300: 只保留清晰的下边框作为与内容区的分隔。
-   */
-  @apply border-b border-slate-300 dark:border-slate-600 !important;
+  background: var(--el-fill-color-light) !important;
+  color: var(--el-text-color-primary) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  border-bottom: 1px solid var(--el-border-color) !important;
 }
 
-/*
- * --------------------------------------------------------------------------
- *  3. 内容单元格样式 (Cell Styling)
- * --------------------------------------------------------------------------
- */
+.el-table-pro-wrapper :deep(.el-table__header th.el-table__cell),
+.el-table-pro-wrapper :deep(.el-table__fixed-header-wrapper th.el-table__cell),
+.el-table-pro-wrapper :deep(.el-table__fixed-right th.el-table__cell),
+.el-table-pro-wrapper :deep(.el-table__fixed-left th.el-table__cell),
+.el-table-pro-wrapper :deep(.el-table__fixed-right-patch) {
+  background: var(--el-fill-color-light) !important;
+  color: var(--el-text-color-primary) !important;
+}
 
-/*
-  【核心】自定义内容单元格的样式
-  通过 `cell-class-name` prop 应用
-*/
+.el-table-pro-wrapper :deep(.el-table-pro-header-cell--custom .cell) {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  line-height: 1.2;
+}
+
+.el-table-pro-wrapper :deep(.el-table-pro-header-cell--custom.is-center .cell) {
+  justify-content: center;
+  text-align: center;
+}
+
+.el-table-pro-wrapper :deep(.el-table-pro-header-cell--custom.is-right .cell) {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.el-table-pro-wrapper :deep(.el-table-pro-header-cell--custom.is-left .cell) {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.el-table-pro-wrapper :deep(.el-table-pro-header-cell--custom .cell .el-checkbox) {
+  margin: 0 auto;
+}
+
 .el-table-pro-wrapper :deep(.el-table-pro-cell--custom) {
-  /*
-   * 文字样式:
-   * - text-slate-600: 内容文字颜色比表头更深，确保数据清晰易读。
-   * - text-sm: 与表头保持一致的字体大小(14px)，确保视觉统一性。
-   */
-  @apply text-slate-600 text-xs dark:text-slate-400 !important;
-
-  /*
-   * 边框:
-   * - border-b border-slate-100: 使用比表头分隔线更浅的颜色作为行间分隔线，
-   *   既能区分行，又不会造成过多的视觉干扰。
-   */
-  @apply border-b border-slate-100 dark:border-slate-700 !important;
+  color: var(--el-text-color-regular) !important;
+  font-size: 12px !important;
+  border-bottom: 1px solid var(--el-border-color-lighter) !important;
 }
 
-/*
- * --------------------------------------------------------------------------
- *  4. 交互效果 (Interaction Effects)
- * --------------------------------------------------------------------------
- */
-
-/*
-  【核心】行悬停效果 (Row Hover Effect)
-  当鼠标悬停在某一行上时，该行所有单元格的背景色改变。
-*/
-.el-table-pro-wrapper :deep(.el-table__body tr:hover > td) {
-  /*
-   * bg-slate-50: 使用与表头背景相同的柔和颜色作为高亮色，
-   * 既能提供清晰的视觉反馈，又保持了整体设计的和谐统一。
-   */
-  @apply bg-slate-50 dark:bg-slate-700 !important;
+.el-table-pro-wrapper :deep(.el-table__body tr:hover > td.el-table__cell) {
+  background: var(--el-fill-color-lighter) !important;
 }
 
-/*
- * --------------------------------------------------------------------------
- *  分页器样式
- * --------------------------------------------------------------------------
- */
+.el-table-pro-wrapper :deep(.el-table__fixed-right::before),
+.el-table-pro-wrapper :deep(.el-table__fixed-left::before) {
+  background: var(--el-border-color-lighter);
+}
 
-/* 分页器整体容器样式 */
+.el-table-pro-wrapper :deep(.el-table__fixed),
+.el-table-pro-wrapper :deep(.el-table__fixed-right) {
+  box-shadow: var(--el-box-shadow-lighter);
+}
+
+.el-table-pro-empty {
+  color: var(--el-text-color-secondary);
+  font-size: 14px;
+}
+
+.el-table-pro-pagination {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 8px;
+}
+
 .el-table-pro-wrapper :deep(.el-pagination) {
-  @apply bg-transparent border-0 shadow-none px-0 py-0;
+  margin-top: 14px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
-/* 分页按钮基础样式 */
-.el-table-pro-wrapper :deep(.el-pagination .el-pager li) {
-  @apply mx-1 px-3 py-1 text-base transition-all duration-150 font-medium text-slate-600 dark:text-slate-300;
-}
-
-/* 当前页按钮高亮 */
-.el-table-pro-wrapper :deep(.el-pagination .el-pager li.is-active) {
-  @apply bg-blue-500 text-white dark:bg-blue-400 dark:text-slate-900 font-bold shadow-md;
-}
-
-/* 悬停效果 */
-.el-table-pro-wrapper :deep(.el-pagination .el-pager li:not(.is-active):hover) {
-  @apply bg-blue-100 text-blue-700 dark:bg-slate-700 dark:text-blue-300 shadow;
-}
-
-/* 其他按钮 */
+.el-table-pro-wrapper :deep(.el-pagination .el-pager li),
 .el-table-pro-wrapper :deep(.el-pagination button) {
-  @apply mx-1 px-2 py-1 text-slate-500 dark:text-slate-300 transition-all duration-150;
+  margin: 0 4px;
+  color: var(--el-text-color-regular);
+  background: var(--el-bg-color);
+  border: 1px solid var(--el-border-color);
+  border-radius: var(--el-border-radius-small);
+  transition: color 0.15s, background-color 0.15s, border-color 0.15s;
 }
 
+.el-table-pro-wrapper :deep(.el-pagination .el-pager li.is-active) {
+  color: #fff !important;
+  background: var(--el-color-primary) !important;
+  border-color: var(--el-color-primary) !important;
+}
+
+.el-table-pro-wrapper :deep(.el-pagination .el-pager li:not(.is-active):hover),
 .el-table-pro-wrapper :deep(.el-pagination button:hover:not(:disabled)) {
-  @apply bg-blue-100 text-blue-700 dark:bg-slate-700 dark:text-blue-300 shadow;
+  color: var(--el-color-primary);
+  background: var(--el-color-primary-light-9);
+  border-color: var(--el-color-primary-light-5);
 }
 
-/* Jumper、Sizes 下拉等输入框样式 */
+.el-table-pro-wrapper :deep(.el-pagination button:disabled) {
+  color: var(--el-text-color-disabled);
+  background: var(--el-disabled-bg-color);
+  border-color: var(--el-border-color-light);
+}
 
 .el-table-pro-wrapper :deep(.el-pagination .el-input__inner) {
-  @apply dark:bg-slate-800 text-slate-700 dark:text-slate-200;
   height: 24px;
+  color: var(--el-text-color-regular);
+  background: var(--el-bg-color);
 }
 
 .el-table-pro-wrapper :deep(.el-pagination .el-select) {
-  @apply pr-4;
+  padding-right: 16px;
 }
 
 .el-table-pro-wrapper :deep(.el-pagination .el-select__wrapper) {
-  @apply px-2.5 py-0.5;
+  padding: 2px 10px;
+  background: var(--el-bg-color);
 }
 </style>
